@@ -1,0 +1,60 @@
+import random
+import datetime
+
+class Customer:
+    def __init__(self, name, email, password):
+        self.name = name
+        self.email = email
+        self.password = password
+        self.cars = []
+
+class Car:
+    def __init__(self, make, model, license_plate):
+        self.make = make
+        self.model = model
+        self.license_plate = license_plate
+        self.complaint = ""
+        self.repair_date = None
+
+class RepairShop:
+    def __init__(self):
+        self.customers = {}  # Dictionary to store customers (email as key)
+        self.repairs = {}  # Dictionary to store repairs (car license plate as key)
+
+    # ... (rest of the RepairShop class methods)
+
+def main():
+    shop = RepairShop()
+
+    while True:
+        name = input("Enter your name: ")
+        email = input("Enter your email: ")
+        password = input("Enter your password: ")
+
+        shop.register_customer(name, email, password)
+
+        # Login
+        customer = shop.login(email, password)
+
+        # Add a car
+        make = input("Enter car make: ")
+        model = input("Enter car model: ")
+        license_plate = input("Enter license plate: ")
+        shop.add_car(customer, make, model, license_plate)
+
+        # Register a complaint
+        complaint = input("Enter complaint: ")
+        shop.register_complaint(customer.cars[0], complaint)
+
+        # Print repair date
+        print("Your car will be ready on:", customer.cars[0].repair_date.strftime("%d/%m/%Y"))
+
+        # Process payment
+        shop.process_payment(customer.cars[0])
+
+        another_car = input("Do you want to process another car? (yes/no): ")
+        if another_car.lower() != "yes":
+            break
+
+if __name__ == "__main__":
+    main()
