@@ -1,0 +1,19 @@
+from symtable import Class
+
+
+class Client:
+    def __init__(self, nome, carro, placa):
+        self.nome = nome
+        self.carro = carro
+        self.placa = placa
+
+    def __str__(self):
+        return f"Client(Name: {self.nome}, Car: {self.carro}, License Plate: {self.placa})"
+
+name_of_client=input('write your name:')
+marc_of_car=input('your car marc:')
+licence_plate=input('your licence plate:')
+
+
+daniel = Client(name_of_client, marc_of_car, licence_plate )
+print(daniel)
