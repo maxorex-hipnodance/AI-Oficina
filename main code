@@ -1,19 +1,110 @@
-from symtable import Class
+import random
+import datetime
 
+class Customer:
+    def __init__(self, name, email, password):
+        self.name = name
+        self.email = email
+        self.password = password
+        self.cars = []
 
-class Client:
-    def __init__(self, nome, carro, placa):
-        self.nome = nome
-        self.carro = carro
-        self.placa = placa
+class Car:
+    def __init__(self, make, model, license_plate):
+        self.make = make
+        self.model = model
+        self.license_plate = license_plate
+        self.complaint = ""
+        self.repair_date = None
 
-    def __str__(self):
-        return f"Client(Name: {self.nome}, Car: {self.carro}, License Plate: {self.placa})"
+class Oficina:
+    def __init__(self):
+        self.customers = {}  # Dictionary to store customers (email as key)
+        self.repairs = {}  # Dictionary to store repairs (car license plate as key)
 
-name_of_client=input('write your name:')
-marc_of_car=input('your car marc:')
-licence_plate=input('your licence plate:')
+    def register_customer(self, name, email, password):
+        customer = Customer(name, email, password)
+        self.customers[email] = customer
 
+    def login(self, email, password):
+        if email in self.customers:
+            customer = self.customers[email]
+            if customer.password == password:
+                return customer
+        return None
 
-daniel = Client(name_of_client, marc_of_car, licence_plate )
-print(daniel)
+    def add_car(self, customer, make, model, license_plate):
+        car = Car(make, model, license_plate)
+        customer.cars.append(car)
+        self.repairs[license_plate] = car
+
+    def register_complaint(self, car, complaint):
+        car.complaint = complaint
+        car.repair_date = datetime.datetime.now() + datetime.timedelta(days=random.randint(1, 7))
+
+    def calculate_repair_cost(self, car):
+        total_cost = random.randint(50, 4000)
+        return total_cost
+
+    def process_payment(self, car):
+        payment_methods = ["Credit Card", "Debit Card", "Cash"]
+        print("Choose your payment method:")
+        for i, method in enumerate(payment_methods, 1):
+            print(f"{i}. {method}")
+        choice = int(input("Enter your choice: "))
+        if choice < 1 or choice > len(payment_methods):
+            print("Invalid choice. Please try again.")
+            return
+        selected_method = payment_methods[choice - 1]
+
+        total_cost = self.calculate_repair_cost(car)
+        print(f"Total cost of repair: ${total_cost}")
+
+        # Implement actual payment processing logic here
+        print(f"Payment processed for car: {car.license_plate} using {selected_method}")
+
+def main():
+    shop = Oficina()
+
+    while True:
+        name = input("Enter your name: ")
+        email = input("Enter your email: ")
+        password = input("Enter your password: ")
+
+        shop.register_customer(name, email, password)
+
+        # Login
+        customer = shop.login(email, password)
+
+        if customer is None:
+            print("Invalid login credentials. Please try again.")
+            continue
+
+        # Add a car
+        make = input("Enter car make: ")
+        model = input("Enter car model: ")
+        license_plate = input("Enter license plate: ")
+        shop.add_car(customer, make, model, license_plate)
+
+        # Register a complaint
+        complaint = input("Enter complaint: ")
+        shop.register_complaint(customer.cars[0], complaint)
+
+        # Print repair date
+        if customer.cars:
+            print("Your car will be ready on:", customer.cars[0].repair_date.strftime("%d/%m/%Y"))
+        else:
+            print("No cars found for this customer.")
+
+        # Calculate and display total cost
+        total_cost = shop.calculate_repair_cost(customer.cars[0])
+        print(f"Total cost of repair: ${total_cost}")
+
+        # Process payment
+        shop.process_payment(customer.cars[0])
+
+        another_car = input("Do you want to process another car? (yes/no): ")
+        if another_car.lower() != "yes":
+            break
+
+if __name__ == "__main__":
+    main()
