@@ -56,9 +56,6 @@ class Oficina:
             return
         selected_method = payment_methods[choice - 1]
 
-        total_cost = self.calculate_repair_cost(car)
-        print(f"Total cost of repair: ${total_cost}")
-
         # Implement actual payment processing logic here
         print(f"Payment processed for car: {car.license_plate} using {selected_method}")
 
