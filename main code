@@ -1,19 +1,102 @@
-from symtable import Class
+from cliente import Client
+from persistencia import gravar_Cliente, carregar_clientes
+
+FICHEIRO = 'clientes.txt'
+
+import random
+import datetime
+def get_cliente_information():
+    print('insert your data: ')
+    nome = input('name: ')
+    carro = input('car model: ')
+    placa = input('car plate: ')
+    email = input('email addres: ')
+    phone_number = input('phone number: ')
+    addres = input('addres: ')
+
+    return Client(nome, carro, placa, email, phone_number, addres)
+
+def listar_clientes(clients):
+    print("\nClient list:")
+    for i, client in enumerate(clients, start=1):
+        print(f"{i}. {client}")
 
 
-class Client:
-    def __init__(self, nome, carro, placa):
-        self.nome = nome
-        self.carro = carro
-        self.placa = placa
+def remover_cliente_por_numero(FICHEIRO, number):
 
-    def __str__(self):
-        return f"Client(Name: {self.nome}, Car: {self.carro}, License Plate: {self.placa})"
+    clients = carregar_clientes(FICHEIRO)
 
-name_of_client=input('write your name:')
-marc_of_car=input('your car marc:')
-licence_plate=input('your licence plate:')
+    if not clients:
+        print("Список клієнтів порожній.")
+        return
 
 
-daniel = Client(name_of_client, marc_of_car, licence_plate )
-print(daniel)
+    if 1 <= number <= len(clients):
+        deleted_cliente = clients.pop(number - 1)
+        gravar_Cliente(FICHEIRO, clients)
+        print(f"\nКлієнт '{deleted_cliente.nome}' успішно видалений.")
+
+        clients = carregar_clientes(FICHEIRO)
+    else:
+        print(f"\nНомер {number} некоректний. Спробуйте ще раз.")
+
+
+
+def main():
+    lista_clientes = carregar_clientes(FICHEIRO)
+    while True:
+        print("\nMenu:")
+        print("1. Add a new client")
+        print("2. Show client list")
+        print("3. Save clients to file")
+        print("4. Delete cliente")
+        print("5. Exit")
+
+        choice = input("Choose an option: ")
+
+        if choice == "1":
+
+            new_client = get_cliente_information()
+            lista_clientes.append(new_client)
+            print("\nClient added to the list.")
+
+        elif choice == "2":
+
+            print("\nClient list:")
+            if not lista_clientes:
+                print("The list is empty.")
+            else:
+                lista_clientes = carregar_clientes(FICHEIRO)
+                for idx, client in enumerate(lista_clientes, 1):
+                    print(f"{idx}. {client}")
+
+        elif choice == "3":
+
+            gravar_Cliente(FICHEIRO, lista_clientes)
+
+        elif choice == "4":
+            if not lista_clientes:
+                print("The client list is empty.")
+            else:
+                listar_clientes(lista_clientes)
+                try:
+                    number = int(input("\nEnter the number of the client to delete: "))
+                    remover_cliente_por_numero(FICHEIRO, number)
+                except ValueError:
+                    print("Please enter a valid number.")
+
+
+        elif choice == "5":
+            # Вийти
+            print("Goodbye!")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+
+if __name__ == "__main__":
+    main()
+
+
+
+
