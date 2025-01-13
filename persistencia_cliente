@@ -4,7 +4,7 @@ def gravar_Cliente(ficheiro, lista_clientes):
     with open(ficheiro, 'w') as f:
         for cliente in lista_clientes:
             f.write(str(cliente)+ '\n')
-    print(f'Clients was saved in {ficheiro} with succes')
+    
 
 
 def carregar_clientes(ficheiro):
@@ -14,7 +14,7 @@ def carregar_clientes(ficheiro):
             for linha in f:
                 cliente = Client.from_string(linha)
                 clientes.append(cliente)
-        print(f'Cliente saved to {ficheiro} with succes')
+        
     except FileNotFoundError:
         print(f'the ficheiro {ficheiro} nao foi encontrado.')
     return clientes
