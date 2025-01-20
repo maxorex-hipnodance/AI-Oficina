@@ -6,6 +6,8 @@ FICHEIRO = 'clientes.txt'
 import random
 import datetime
 
+
+#get cliente information to put it in the file 'FICHEIRO'
 def get_cliente_information():
     print('insert your data: ')
     while True:
@@ -19,21 +21,41 @@ def get_cliente_information():
     placa = input('car plate: ')
     while True:
         email = input('email addres: ')
-        if 'gmail.com' in email or 'hotmail.com' in email:
+
+        if 'gmail.com' in email or 'hotmail.com' or '1' in email:
+
             print('email valid')
             break
         else:
             print('email invalid')
+
+    while True:
+        phone_number = input('phone number: ')
+        if not phone_number.isdigit():
+            print('please insert correct phone number')
+        elif len(phone_number) != 9:
+            print('phone number must contein 9 numbers')
+        else:
+            break
+
+
     phone_number = input('phone number: ')
+
     addres = input('addres: ')
 
     return Client(nome, carro, placa, email, phone_number, addres)
 
 
+#function to write numerical list of clients
+
 def listar_clientes(clients):
     print("\nClient list:")
     for i, client in enumerate(clients, start=1):
         print(f"{i}. {client}")
+
+
+#write numerical list of clients and deleat them by number choosen by manager
+=======
 
 
 def remover_cliente_por_numero(FICHEIRO, number):
@@ -54,6 +76,8 @@ def remover_cliente_por_numero(FICHEIRO, number):
     else:
         print(f"\nNumber {number} is incorrect. Try again.")
 
+
+#function to change cliente information and upload new data in file 'FICHEIRO'
 
 def modificar_cliente(FICHEIRO):
     clientes = carregar_clientes(FICHEIRO)
