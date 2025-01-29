@@ -1,171 +1,26 @@
 from cliente import Client
-from persistencia import gravar_Cliente, carregar_clientes
+from persistencia import gravar_Cliente, carregar_clientes, save_Car, upload_car
+from defs import get_cliente_information, listar_clientes, remover_cliente_por_numero, modificar_cliente, get_car_information, listar_car, remove_car_by_number, update_car_info
 
 FICHEIRO = 'clientes.txt'
-
-import random
-import datetime
-
-
-#get cliente information to put it in the file 'FICHEIRO'
-def get_cliente_information():
-    print('insert your data: ')
-    while True:
-        nome = input('name: ')
-        if nome.isalpha():
-            break
-        else:
-            print('pleas insert your name correctly')
-
-    carro = input('car model: ')
-    placa = input('car plate: ')
-    while True:
-        email = input('email addres: ')
-
-        if 'gmail.com' in email or 'hotmail.com' or '1' in email:
-
-            print('email valid')
-            break
-        else:
-            print('email invalid')
-
-    while True:
-        phone_number = input('phone number: ')
-        if not phone_number.isdigit():
-            print('please insert correct phone number')
-        elif len(phone_number) != 9:
-            print('phone number must contein 9 numbers')
-        else:
-            break
-
-
-    phone_number = input('phone number: ')
-
-    addres = input('addres: ')
-
-    return Client(nome, carro, placa, email, phone_number, addres)
-
-
-#function to write numerical list of clients
-
-def listar_clientes(clients):
-    print("\nClient list:")
-    for i, client in enumerate(clients, start=1):
-        print(f"{i}. {client}")
-
-
-#write numerical list of clients and deleat them by number choosen by manager
-=======
-
-
-def remover_cliente_por_numero(FICHEIRO, number):
-
-    clients = carregar_clientes(FICHEIRO)
-
-    if not clients:
-        print("The list is empty")
-        return
-
-
-    if 1 <= number <= len(clients):
-        deleted_cliente = clients.pop(number - 1)
-        gravar_Cliente(FICHEIRO, clients)
-        print(f"\nCliente '{deleted_cliente.nome}' was successfully deleted.")
-
-        clients = carregar_clientes(FICHEIRO)
-    else:
-        print(f"\nNumber {number} is incorrect. Try again.")
-
-
-#function to change cliente information and upload new data in file 'FICHEIRO'
-
-def modificar_cliente(FICHEIRO):
-    clientes = carregar_clientes(FICHEIRO)
-
-    if not clientes:
-        print("cliente list is empty.")
-        return
-
-    listar_clientes(clientes)
-
-    try:
-
-        number = int(input("\ninsert number of cliente wich need to change: "))
-
-        if 1 <= number <= len(clientes):
-            selected_cliente = clientes[number - 1]
-            print(f"\nSelected cliente: {selected_cliente}")
-
-            while True:
-
-                print("\nWhat you wont to change?")
-                print("1. Name")
-                print("2. Car model")
-                print("3. Car plate")
-                print("4. Email")
-                print("5. Phone number")
-                print("6. Addres")
-                print("7. Save changes")
-
-                option = input("Choose option: ")
-
-                if option == "1":
-                    new_value = input(f"New name (now: {selected_cliente.nome}): ")
-                    if new_value.strip():
-                        selected_cliente.nome = new_value
-                        print("Name chenged.")
-                elif option == "2":
-                    new_value = input(f"New car model  (now: {selected_cliente.carro}): ")
-                    if new_value.strip():
-                        selected_cliente.carro = new_value
-                        print("Car model is chenged.")
-                elif option == "3":
-                    new_value = input(f"New car plate (now: {selected_cliente.placa}): ")
-                    if new_value.strip():
-                        selected_cliente.placa = new_value
-                        print("Car plate is changed.")
-                elif option == "4":
-                    new_value = input(f"New email (now: {selected_cliente.email}): ")
-                    if new_value.strip():
-                        selected_cliente.email = new_value
-                        print("Email is changed.")
-                elif option == "5":
-                    new_value = input(f"New phone number (now: {selected_cliente.phone_number}): ")
-                    if new_value.strip():
-                        selected_cliente.phone_number = new_value
-                        print("Phone number is chenged.")
-                elif option == "6":
-                    new_value = input(f"New addres (now: {selected_cliente.addres}): ")
-                    if new_value.strip():
-                        selected_cliente.addres = new_value
-                        print("Addres is chenged.")
-                elif option == "7":
-
-                    print("changing is finiched.")
-                    break
-                else:
-                    print("Некоректний вибір. Спробуйте ще раз.")
-
-            clientes[number - 1] = selected_cliente
-
-            gravar_Cliente(FICHEIRO, clientes)
-            print("\nChanges are sasved.")
-        else:
-            print(f"Number {number} incorrect. Try again.")
-
-    except ValueError:
-        print("please enter correct number.")
+FILE = 'carros.txt'
 
 
 def main():
     lista_clientes = carregar_clientes(FICHEIRO)
+    car_list = upload_car(FILE)
     while True:
         print("\nMenu:")
         print("1. Add a new client")
         print("2. Show client list")
         print("3. Delete cliente")
         print("4. Change cliente info")
-        print("5. Exit")
+        print("5. Add a new car")
+        print("6. Show car list")
+        print("7. Delete car")
+        print("8. Update car information")
+        print("9. Exit")
+
 
         choice = input("Choose an option: ")
 
@@ -181,7 +36,7 @@ def main():
             lista_clientes = carregar_clientes(FICHEIRO)
             print("\nClient list:")
             if not lista_clientes:
-                print("The list is empty.")
+                print("The client list is empty.")
             else:
                 for idx, client in enumerate(lista_clientes, 1):
                     print(f"{idx}. {client}")
@@ -197,7 +52,7 @@ def main():
                     number = int(input("\nEnter the number of the client to delete: "))
                     remover_cliente_por_numero(FICHEIRO, number)
                 except ValueError:
-                    print("Please enter a valid number.")
+                    print("Invalid input. Please enter a valid number.")
 
 
         elif choice == "4":
@@ -205,16 +60,57 @@ def main():
 
 
         elif choice == "5":
+                new_car = get_car_information()
+                car_list.append(new_car)
+                save_Car(FILE, car_list)
+                print('\nNew car was added to carros.txt')
+
+        elif choice == "6":
+                car_list = upload_car(FILE)
+                print("\nCar list:")
+                if not car_list:
+                    print("The list is empty.")
+                else:
+                    listar_car(car_list)
+
+        elif choice == "7":
+                car_list = upload_car(FILE)
+                if not car_list:
+                    print("The list is empty.")
+                else:
+                    listar_car(car_list)
+                    try:
+                        car_number = int(input("Enter the number of the car to delete: "))
+                        remove_car_by_number(FILE, car_number)
+                    except ValueError:
+                        print("Invalid input. Please enter a valid number.")
+
+        elif choice == "8":
+                car_list = upload_car(FILE)
+                if not car_list:
+                    print("The list is empty.")
+                else:
+                    listar_car(car_list)
+                    try:
+                        car_number = int(input("Enter the number of the car to update: "))
+                        if 1 <= car_number <= len(car_list):
+                            updated_car = update_car_info(car_list[car_number - 1])
+                            car_list[car_number - 1] = updated_car
+                            save_Car(FILE, car_list)
+                            print(f"\nCar {car_number} was updated successfully.")
+                        else:
+                            print(f"\nInvalid car number. Please enter a number between 1 and {len(car_list)}.")
+                    except ValueError:
+                        print("Invalid input. Please enter a valid number.")
+        elif choice == "5":
 
             print("Goodbye!")
             break
         else:
-            print("Invalid choice. Please try again.")
+            print('Invalid Number, please try again')
+
+
 
 
 if __name__ == "__main__":
     main()
-
-
-
-
