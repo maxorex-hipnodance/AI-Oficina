@@ -7,7 +7,7 @@ def get_cliente_information():
     print('please Insert your data: ')
     while True:
         nome = input('Name: ')
-        if nome.isalpha():
+        if nome.replace(" ", "").isalpha():
             break
         else:
             print('Pleas insert your name correctly')
@@ -21,7 +21,7 @@ def get_cliente_information():
             break
     while True:
         email = input('Email addres: ')
-        if '@gmail.com' in email or '@hotmail.com' or '1' in email:
+        if '@gmail.com' in email or '@hotmail.com' in email:
             break
         else:
             print('Email invalid')
@@ -95,7 +95,12 @@ def modificar_cliente(FICHEIRO):
                 option = input("Choose option: ")
 
                 if option == "1":
-                    new_value = input(f"New name (Now: {selected_cliente.nome}): ")
+                    while True:
+                        new_value = input(f"New name (Now: {selected_cliente.nome}): ")
+                        if new_value.replace(" ", "").isalpha():
+                            break
+                        else:
+                            print('Please insert correct name')
                     if new_value.strip():
                         selected_cliente.nome = new_value
                         print("Name chenged.")
@@ -105,17 +110,34 @@ def modificar_cliente(FICHEIRO):
                         selected_cliente.carro = new_value
                         print("Car model is chenged.")
                 elif option == "3":
-                    new_value = input(f"New car plate (Now: {selected_cliente.placa}): ")
+                    while True:
+                        new_value = input(f"New car plate (Now: {selected_cliente.placa}): ")
+                        if len(new_value) != 6:
+                            print('Uncorrect car plate')
+                        else:
+                            break
                     if new_value.strip():
                         selected_cliente.placa = new_value
                         print("Car plate is changed.")
                 elif option == "4":
-                    new_value = input(f"New email (Now: {selected_cliente.email}): ")
+                    while True:
+                        new_value = input(f"New email (Now: {selected_cliente.email}): ")
+                        if '@gmail.com' in new_value or '@hotmail.com' in new_value:
+                            break
+                        else:
+                            print('Email invalid')
                     if new_value.strip():
                         selected_cliente.email = new_value
                         print("Email is changed.")
                 elif option == "5":
-                    new_value = input(f"New phone number (Now: {selected_cliente.phone_number}): ")
+                    while True:
+                        new_value = input(f"New phone number (Now: {selected_cliente.phone_number}): ")
+                        if not new_value.isdigit():
+                            print('Please insert correct phone number')
+                        elif len(new_value) != 9:
+                            print('Phone number must contein 9 numbers')
+                        else:
+                            break
                     if new_value.strip():
                         selected_cliente.phone_number = new_value
                         print("Phone number is chenged.")
