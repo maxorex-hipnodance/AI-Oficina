@@ -1,13 +1,12 @@
-id: 0016    29/01/2025
-Test case: The possibility of pouring it out of the added cars
+id: 0016   02/02/2025
+Test case: Show a list of cars added using the "Create a car" function.
 
-Step-by-step:In the menu, select the item we are interested in, namely the removal of the car. In the list of cars, select the car to delete.
+Step-by-step:First, we select from the menu the item that interests us, namely to show a list of added cars.
 
-Resultado esperado:When you select an item in the menu, the program shows a list of previously added cars according to their addition timeline, namely new cars at the bottom and old cars at the top. After that, we select the car to delete, the program deletes the selected car and informs us about it, at the end the program updates the list. Cars that were below the removed car should receive different numbers according to the new list 
+Resultado esperado:The program displays all previously added cars according to the chronology of their addition, namely old cars on top and new ones on the bottom
  
 
-Result obtained:The result obtained meets expectations. 
-  
+Result obtained:The result meets expectations. 
    
 
 
