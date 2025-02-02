@@ -1,0 +1,14 @@
+id: 0007    29/01/2025
+Test case: The possibility of pouring it out of the added cars
+
+Step-by-step:In the menu, select the item we are interested in, namely the removal of the car. In the list of cars, select the car to delete.
+
+Resultado esperado:When you select an item in the menu, the program shows a list of previously added cars according to their addition timeline, namely new cars at the bottom and old cars at the top. After that, we select the car to delete, the program deletes the selected car and informs us about it, at the end the program updates the list. Cars that were below the removed car should receive different numbers according to the new list 
+ 
+
+Result obtained:The result obtained partially meets expectations. When we select the item we are interested in in the menu, the program displays the inscription "Cars uploaded de carros.txt successfully." which is not mandatory for the user. In front of the list itself, we see the inscription "Client list:" although we are looking at the list of cars. All other aspects of this item work properly
+  
+   
+
+
+
