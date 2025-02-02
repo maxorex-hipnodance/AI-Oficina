@@ -1,0 +1,24 @@
+id: 0008    29/01/2025
+
+Test case: The ability to change the information of any of the previously added cars.
+
+Step-by-step:In the menu we have to select the item we are interested in, namely "Update car information". We select the car whose information we need to change and change it step by step.
+
+Resultado esperado:When selecting an item, we should see a list of previously added cars. After selecting one of the cars, we can change its data step by step. If you do not need to change the data, you just need to press enter to skip this step.
+The changed data must meet certain requirements, namely:
+ THE BRAND OF THE CAR: the brand cannot contain numbers.
+ CAR MODEL: the model can contain both letters and numbers.
+ YEAR: the year should contain only numbers no more and not less  than 4 digits.
+ LICENCE PLATE: the license plate of the car must contain no more than 6 characters.
+ COMPLAINT: there may be any symbols.
+
+
+
+Result obtained:The result obtained partially meets expectations, but the method of data storage does not meet the expectations, namely
+THE BRAND OF THE CAR: the brand cannot contain numbers.
+ YEAR: the year should contain only numbers no more and not less than 4 digits.
+ LICENCE PLATE: the license plate of the car must contain no more than 6 characters.
+   
+
+
+
