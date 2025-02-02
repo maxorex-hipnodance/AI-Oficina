@@ -36,7 +36,7 @@ def upload_car(file):
             for line in f:
                 car = Car.from_string(line)
                 cars.append(car)
-        print(f'Cars uploaded de {file} successfully.')
+
     except FileNotFoundError:
         print (f'File {file} was not found.')
     return cars
