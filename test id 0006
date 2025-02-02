@@ -1,0 +1,14 @@
+id: 0006    29/01/2025
+Test case: Show a list of cars added using the "Create a car" function.
+
+Step-by-step:First, we select from the menu the item that interests us, namely to show a list of added cars.
+
+Resultado esperado:The program displays all previously added cars according to the chronology of their addition, namely old cars on top and new ones on the bottom
+ 
+
+Result obtained:The result obtained partially meets expectations. After receiving the list with information about the added cars, a strange (not necessary) indentation was noticed between the license plate and the complaint
+   
+   
+
+
+
