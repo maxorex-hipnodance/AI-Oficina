@@ -8,9 +8,9 @@ class Client:
         self.addres = addres
 
     def __str__(self):
-        return f"{self.nome},{self.carro},{self.placa},{self.email},{self.phone_number},{self.addres}"
+        return f"{self.nome};{self.carro};{self.placa};{self.email};{self.phone_number};{self.addres}"
 
     @staticmethod
     def from_string(data_str):
-        nome, carro, placa, email, phone_number, addres = data_str.strip().split(',')
-        return Client(nome, carro,str(placa), str(email), str(phone_number), str(addres))
+        nome, carro, placa, email, phone_number, addres = data_str.strip().split(';')
+        return Client(nome, carro,placa, email, phone_number, addres)
