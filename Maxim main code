@@ -1,0 +1,63 @@
+from oficina_max import listar_car, remove_car_by_number, get_car_information, update_car_info
+from persistencia import save_Car, upload_car
+
+FILE = 'carros.txt'
+
+def main():
+    car_list = upload_car(FILE)
+    print(car_list)
+    print('\nWelcome to Oficina, please chose how you want to proceed ?')
+    while True:
+        print("\n6. Add a new car")
+        print("7. Show car list")
+        print("8. Delete car")
+        print("9. Update car information")
+
+        choice = input("Choose one of the option above: ")
+
+        if choice == "6":
+            new_car = get_car_information()
+            car_list.append(new_car)
+            save_Car(FILE, car_list)
+            print('\nNew car was added to carros.txt')
+
+        elif choice == "7":
+            car_list = upload_car(FILE)
+            print("\nCar list:")
+            if not car_list:
+                print("The list is empty.")
+            else:
+                listar_car(car_list)
+
+        elif choice == "8":
+            car_list = upload_car(FILE)
+            if not car_list:
+                print("The list is empty.")
+            else:
+                listar_car(car_list)
+                try:
+                    car_number = int(input("Enter the number of the car to delete: "))
+                    remove_car_by_number(FILE, car_number)
+                except ValueError:
+                    print("Invalid input. Please enter a valid number.")
+
+        elif choice == "9":
+            car_list = upload_car(FILE)
+            if not car_list:
+                print("The list is empty.")
+            else:
+                listar_car(car_list)
+                try:
+                    car_number = int(input("Enter the number of the car to update: "))
+                    if 1 <= car_number <= len(car_list):
+                        updated_car = update_car_info(car_list[car_number - 1])
+                        car_list[car_number - 1] = updated_car
+                        save_Car(FILE, car_list)
+                        print(f"\nCar {car_number} was updated successfully.")
+                    else:
+                        print(f"\nInvalid car number. Please enter a number between 1 and {len(car_list)}.")
+                except ValueError:
+                    print("Invalid input. Please enter a valid number.")
+
+if __name__ == "__main__":
+    main()
