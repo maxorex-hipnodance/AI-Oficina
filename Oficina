@@ -102,7 +102,7 @@ def main():
                             print(f"\nInvalid car number. Please enter a number between 1 and {len(car_list)}.")
                     except ValueError:
                         print("Invalid input. Please enter a valid number.")
-        elif choice == "5":
+        elif choice == "9":
 
             print("Goodbye!")
             break
