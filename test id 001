@@ -1,0 +1,21 @@
+id: 001   29/01
+
+Test: add new client
+
+Step-by-step: escolher a opção nº1, escrever o nome(so com letras), a marca do carro(qualquer simbolo), a placa do carro(tem de conter 6 digitos/letras), o email(tem que ter @gmail.com / @hotmail.com e entre outos), o numero de telemovel(tem que ter somente 9 numeros) e a morada.
+
+Resultado esperado: 
+	- NAME: so ter letras;
+	- CAR MAKE: pode ter letras e numeros;
+	- CAR PLATE: tem que ter exatamente 6 letras/numeros;
+	- EMAIL: tem que ter @gmail.com / @hotmail.com e entre outos;
+	- NUMERO DE TELEMOVEL: tem que ter nem mais e nem menos que 9 numeros;
+	- MORADA: poder ter qualquer tipo de letras, numeros, etc;
+
+Resultado obtido:
+	- NAME: passa o teste;
+	- CAR MAKE: passa o teste;
+	- CAR PLATE: passa o teste;
+	- EMAIL:não passa o teste pois continua com o codigo meso não tendo @gmail.com / @hotmail.com e entre outos;
+	- NUMERO DE TELEMOVEL: passa o teste:
+	- MORADA: passa o teste:
