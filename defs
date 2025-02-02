@@ -1,6 +1,6 @@
 from cliente import Client
 from car import Car
-from persistensia import gravar_Cliente, carregar_clientes, save_Car, upload_car
+from persistencia import gravar_Cliente, carregar_clientes, save_Car, upload_car
 
 #get cliente information to put it in the file 'FICHEIRO'
 def get_cliente_information():
