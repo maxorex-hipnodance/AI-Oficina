@@ -1,0 +1,42 @@
+from cliente import Client
+from car import Car
+
+def gravar_Cliente(ficheiro, lista_clientes):
+    with open(ficheiro, 'w') as f:
+        for cliente in lista_clientes:
+            f.write(str(cliente)+ '\n')
+
+
+
+def carregar_clientes(ficheiro):
+    clientes = []
+    try:
+        with open(ficheiro, 'r') as f:
+            for linha in f:
+                cliente = Client.from_string(linha)
+                clientes.append(cliente)
+
+    except FileNotFoundError:
+        print(f'the ficheiro {ficheiro} nao foi encontrado.')
+    return clientes
+
+
+
+#car
+def save_Car(file, car_list):
+    with open(file, 'w') as f:
+        for car in car_list:
+            f.write(str(car)+ '\n')
+
+
+def upload_car(file):
+    cars = []
+    try:
+        with open(file, 'r') as f:
+            for line in f:
+                car = Car.from_string(line)
+                cars.append(car)
+
+    except FileNotFoundError:
+        print (f'File {file} was not found.')
+    return cars
