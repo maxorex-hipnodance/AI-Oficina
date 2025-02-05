@@ -1,0 +1,11 @@
+id: 002    30/01
+Teste: Show client list
+
+Step-by-step: 
+	no menu escolher a opção numero 2 depois de adicionar um cliente.
+
+Resultado esperado:
+	Deve aparecer toda a informação em um linha com as palavras divididas entre si com ";".
+
+Resultado obtido:
+	Obeteve-se o resultado esperado sem erros.

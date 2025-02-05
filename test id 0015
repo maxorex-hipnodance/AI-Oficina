@@ -1,0 +1,21 @@
+id: 0015    02/02/2025
+Test case: recording information about the client's car
+
+Step-by-step:First, write down the brand of the car,
+then we write down the car model, then enter the year of manufacture of the car, license plate of the car, complaint.
+
+Resultado esperado:
+ THE BRAND OF THE CAR: the brand cannot contain numbers.
+ CAR MODEL: the model can contain both letters and numbers.
+ YEAR: the year should contain only numbers no more and not less than 4 digits.
+ LICENCE PLATE: the license plate of the car must contain no more than 6 characters.
+ COMPLAINT: there may be any symbols.
+
+Result obtained:
+   THE BRAND OF THE CAR: The result obtained does not meet expectations, since during the testing it was revealed that it was possible to write down the make of the car along with the number.
+   CAR MODEL: The result obtained meets expectations, it is possible to record information with all symbols
+   YEAR:The result obtained does not meet expectations, because it is possible to write the year in more than 4 characters and less than 4 characters.
+   LICENCE PLATE: The result obtained does not meet expectations, because it is possible to write the year in more than 6 characters and less than 6 characters.
+   COMPLAINT:The result obtained meet expectations.
+
+
