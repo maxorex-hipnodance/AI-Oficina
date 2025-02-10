@@ -6,17 +6,15 @@ from cliente import Client
 from car import Car
 from persistencia import gravar_Cliente, carregar_clientes, save_Car, upload_car
 from defs import get_cliente_information, listar_clientes, remover_cliente_por_numero, modificar_cliente, get_car_information, listar_car, remove_car_by_number, update_car_info
-from program_defs import listar_clientes_programm
+from program_defs import listar_clientes_programm, listar_car_programm, get_cliente_information_programm, get_car_information_programm, deleat_client_programm, deleat_car_programm
 
 
 FICHEIRO = 'clientes.txt'
 FILE = 'carros.txt'
-lista_clientes = carregar_clientes(FICHEIRO)
-car_list = upload_car(FILE)
 
 root = tk.Tk()
 root.title("Oficina")
-root.geometry("400x500")
+root.geometry("899x500")
 root.config(bg='#222831')
 
 zagolovok = tk.Label(text='OFICINA BY MAX&MAX', font=("Helvetica", 60, "bold"), fg="#00FFF5", bg="#393E46")
@@ -31,31 +29,31 @@ root.grid_columnconfigure(3, weight=1)
 for i in range(5):
     root.grid_rowconfigure(i, weight=1)
 
-button_create_client= tk.Button(root, text='Create a cliente', bg='#393E46', fg='#00FFF5', relief=tk.FLAT, font=("Arial", 12) )
+button_create_client= tk.Button(root, text='Create a cliente',command=lambda:get_cliente_information_programm(root), bg='#393E46', fg='#00FFF5', relief=tk.FLAT, font=("Arial", 12), activebackground='lime' )
 button_create_client.grid(row=1, column=1, pady=(40, 20), sticky="nsew")
 
-button_show_client_list = tk.Button(root, text="Show cliente list", command=lambda: listar_clientes_programm(root, lista_clientes),bg='#393E46', fg='#00FFF5', relief=tk.FLAT, font=("Arial", 12))
+button_show_client_list = tk.Button(root, text="Show cliente list", command=lambda:listar_clientes_programm(root),bg='#393E46', fg='#00FFF5', relief=tk.FLAT, font=("Arial", 12), activebackground='lime')
 button_show_client_list.grid(row=2, column=1, pady=20, sticky="nsew")
 
-button_delete_client= tk.Button(root, text='Delete a client',bg='#393E46', fg='#00FFF5', relief=tk.FLAT, font=("Arial", 12))
+button_delete_client= tk.Button(root, text='Delete a client', command=lambda:deleat_client_programm(root), bg='#393E46', fg='#00FFF5', relief=tk.FLAT, font=("Arial", 12), activebackground='lime')
 button_delete_client.grid(row=3, column=1, pady=20, sticky="nsew")
 
-button_change_cliente_info= tk.Button(root, text='Change cliente info',bg='#393E46', fg='#00FFF5', relief=tk.FLAT, font=("Arial", 12))
+button_change_cliente_info= tk.Button(root, text='Change cliente info',bg='#393E46', fg='#00FFF5', relief=tk.FLAT, font=("Arial", 12), activebackground='lime')
 button_change_cliente_info.grid(row=4, column=1, pady=20, sticky="nsew")
 
-button_add_a_new_car= tk.Button(root, text='Add a new car',bg='#393E46', fg='#00FFF5', relief=tk.FLAT, font=("Arial", 12))
+button_add_a_new_car= tk.Button(root, text='Add a new car', command =lambda:get_car_information_programm(root),bg='#393E46', fg='#00FFF5', relief=tk.FLAT, font=("Arial", 12), activebackground='lime')
 button_add_a_new_car.grid(row=1, column=2, pady=(40,20), padx=(40,0), sticky="nsew")
 
-button_show_car_list= tk.Button(root, text='Show car list',bg='#393E46', fg='#00FFF5', relief=tk.FLAT, font=("Arial", 12))
+button_show_car_list= tk.Button(root, text='Show car list',command=lambda:listar_car_programm(root),bg='#393E46', fg='#00FFF5', relief=tk.FLAT, font=("Arial", 12), activebackground='lime')
 button_show_car_list.grid(row=2, column=2, pady=20, padx=(40,0), sticky="nsew")
 
-button_delete_car= tk.Button(root, text='Delete car',bg='#393E46', fg='#00FFF5', relief=tk.FLAT, font=("Arial", 12))
+button_delete_car= tk.Button(root, text='Delete car',command=lambda:deleat_car_programm(root),bg='#393E46', fg='#00FFF5', relief=tk.FLAT, font=("Arial", 12), activebackground='lime')
 button_delete_car.grid(row=3, column=2, pady=20, padx=(40,0), sticky="nsew")
 
-button_update_car_information= tk.Button(root, text='Update car information',bg='#393E46', fg='#00FFF5', relief=tk.FLAT, font=("Arial", 12))
+button_update_car_information= tk.Button(root, text='Update car information',bg='#393E46', fg='#00FFF5', relief=tk.FLAT, font=("Arial", 12), activebackground='lime')
 button_update_car_information.grid(row=4, column=2, pady=20, padx=(40,0), sticky="nsew")
 
-button_close = tk.Button(root, text="Close",bg='red', relief=tk.FLAT, font=("Arial", 12))
+button_close = tk.Button(root, text="Close",command=root.destroy,bg='red', relief=tk.FLAT, font=("Arial", 12), activebackground='lime')
 button_close.grid(row=5, column=1, columnspan=2, pady=20, sticky="nsew")
 
 
