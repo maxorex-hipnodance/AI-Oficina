@@ -1,0 +1,15 @@
+class Car:
+    def __init__(self, make, model, year, plate, complaint):
+        self.make = make
+        self.model = model
+        self.year = year
+        self.plate = plate
+        self.complaint = complaint
+
+    def __str__(self):
+        return f'{self.make};{self.model};{self.year};{self.plate};{self.complaint}'
+
+    @staticmethod
+    def from_string(data_str):
+        make, model, year, plate, complaint = data_str.strip().split(';')
+        return Car(make, model, int(year), plate, complaint)

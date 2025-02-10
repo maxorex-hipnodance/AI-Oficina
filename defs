@@ -1,0 +1,274 @@
+from cliente import Client
+from car import Car
+from persistencia import gravar_Cliente, carregar_clientes, save_Car, upload_car
+
+#get cliente information to put it in the file 'FICHEIRO'
+def get_cliente_information():
+    print('please Insert your data: ')
+    while True:
+        nome = input('Name: ')
+        if nome.replace(" ", "").isalpha():
+            break
+        else:
+            print('Pleas insert your name correctly (only letters and spaces allowed)')
+
+    carro = input('Car make: ')
+    while True:
+        placa = input('Car plate: ')
+        if len(placa) !=6:
+            print('Incorrect car plate')
+        else:
+            break
+    while True:
+        email = input('Email address: ')
+        if '@gmail.com' in email or '@hotmail.com' in email:
+            break
+        else:
+            print('Email invalid')
+    while True:
+        phone_number = input('Phone number: ')
+        if not phone_number.isdigit():
+            print('Please insert correct phone number')
+        elif len(phone_number) != 9:
+            print('Phone number must contain 9 numbers')
+        else:
+            break
+
+    addres = input('Address: ')
+
+    return Client(nome, carro, placa, email, phone_number, addres)
+
+#function to write numerical list of clients
+def listar_clientes(clients):
+    print("\nClient list:")
+    for i, client in enumerate(clients, start=1):
+        print(f"{i}. {client}")
+
+#write numerical list of clients and deleat them by number choosen by manager
+def remover_cliente_por_numero(FICHEIRO, number):
+
+    clients = carregar_clientes(FICHEIRO)
+
+    if not clients:
+        print("The list is empty")
+        return
+
+    if 1 <= number <= len(clients):
+        deleted_cliente = clients.pop(number - 1)
+        gravar_Cliente(FICHEIRO, clients)
+        print(f"\nCliente '{deleted_cliente.nome}' was successfully deleted.")
+
+        clients = carregar_clientes(FICHEIRO)
+    else:
+        print(f"\nNumber {number} is incorrect. Try again.")
+
+#function to change cliente information and upload new data in file 'FICHEIRO'
+def modificar_cliente(FICHEIRO):
+    clientes = carregar_clientes(FICHEIRO)
+
+    if not clientes:
+        print("Cliente list is empty.")
+        return
+
+    listar_clientes(clientes)
+
+    try:
+
+        number = int(input("\nInsert number of cliente that you want to change: "))
+
+        if 1 <= number <= len(clientes):
+            selected_cliente = clientes[number - 1]
+            print(f"\nSelected cliente: {selected_cliente}")
+
+            while True:
+
+                print("\nWhat you wont to change?")
+                print("1. Name")
+                print("2. Car model")
+                print("3. Car plate")
+                print("4. Email")
+                print("5. Phone number")
+                print("6. Address")
+                print("7. Save changes")
+
+                option = input("Choose option: ")
+
+                if option == "1":
+                    while True:
+                        new_value = input(f"New name (Now: {selected_cliente.nome}): ")
+                        if new_value.replace(" ", "").isalpha():
+                            break
+                        else:
+                            print('Please insert correct name')
+                    if new_value.strip():
+                        selected_cliente.nome = new_value
+                        print("Name chenged.")
+                elif option == "2":
+                    new_value = input(f"New car model  (Now: {selected_cliente.carro}): ")
+                    if new_value.strip():
+                        selected_cliente.carro = new_value
+                        print("Car model is chenged.")
+                elif option == "3":
+                    while True:
+                        new_value = input(f"New car plate (Now: {selected_cliente.placa}): ")
+                        if len(new_value) != 6:
+                            print('Uncorrect car plate')
+                        else:
+                            break
+                    if new_value.strip():
+                        selected_cliente.placa = new_value
+                        print("Car plate is changed.")
+                elif option == "4":
+                    while True:
+                        new_value = input(f"New email (Now: {selected_cliente.email}): ")
+                        if '@gmail.com' in new_value or '@hotmail.com' in new_value:
+                            break
+                        else:
+                            print('Email invalid')
+                    if new_value.strip():
+                        selected_cliente.email = new_value
+                        print("Email is changed.")
+                elif option == "5":
+                    while True:
+                        new_value = input(f"New phone number (Now: {selected_cliente.phone_number}): ")
+                        if not new_value.isdigit():
+                            print('Please insert correct phone number')
+                        elif len(new_value) != 9:
+                            print('Phone number must contein 9 numbers')
+                        else:
+                            break
+                    if new_value.strip():
+                        selected_cliente.phone_number = new_value
+                        print("Phone number is chenged.")
+                elif option == "6":
+                        new_value = input(f"New addres (Now: {selected_cliente.addres}): ")
+                        if new_value.strip():
+                            selected_cliente.addres = new_value
+                            print("Addres is chenged.")
+                elif option == "7":
+
+                    print("Changing is finiched.")
+                    break
+                else:
+                    print("Uncorrect input. Please try again.")
+
+            clientes[number - 1] = selected_cliente
+
+            gravar_Cliente(FICHEIRO, clientes)
+            print("\nChanges are saved.")
+        else:
+            print(f"Number {number} incorrect. Try again.")
+
+    except ValueError:
+        print("Please enter correct number.")
+
+
+
+
+# car defenitions
+def get_car_information():
+    print('\nPlease insert your car information below.')
+
+    while True:
+        make = input('Car Make: ')
+        if make.replace(" ", "").isalpha():
+            break
+        else:
+            print('Please insert car make correctly (only letters and spaces allowed)')
+
+    while True:
+        model = input('Car Model: ')
+        if model.replace(" ", "").isalnum():
+            break
+        else:
+            print('Please insert car make correctly (only letters, numbers and spaces are allowed)')
+
+    while True:
+        try:
+            year = int(input('Year: '))
+            if 1000 <= year <= 9999:
+                break
+            else:
+                print("Invalid year.")
+        except ValueError:
+            print("Invalid year")
+    while True:
+        plate = input('License Plate: ')
+        if len(plate) !=6:
+            print('Invalid License plate')
+        else:
+            break
+
+    complaint = input('Complaint: ')
+    complaint = complaint.replace(";", ",")
+    return Car(make, model, year, plate, complaint)
+
+def listar_car(car):
+    print("\nCar list:")
+    for i, car in enumerate(car, start=1):
+        print(f"{i}. {car}")
+
+def remove_car_by_number(file, number):
+
+    cars = upload_car(file)
+
+    if not cars:
+        print("The list is empty")
+    elif 1 <= number <= len(cars):
+        deleted_car = cars.pop(number - 1)
+        save_Car(file, cars)
+        print(f"\nCar '{deleted_car}' was successfully deleted.")
+    else:
+        print(f"\nNumber {number} is incorrect. Try again.")
+
+def update_car_info(car):
+    print(f"\nCurrent car information:\n{car}")
+
+    while True:
+        new_make = input("Enter new make (or press Enter to keep current): ")
+        if new_make.replace(" ", "").isalpha():
+            break
+        elif new_make == "":
+            break
+        else:
+            print('Please insert car make correctly (only letters and spaces allowed)')
+
+    new_model = input("Enter new model (or press Enter to keep current): ")
+
+    while True:
+        new_year = input('Enter new year (or press Enter to keep current): ')
+        if new_year == "":
+            break
+        if not new_year.isdigit():
+            print('Please insert correct year')
+        elif len(new_year) != 4:
+            print('Year must contain 4 numbers')
+        else:
+            break
+
+    new_complaint = input("Enter new complaint (or press Enter to keep current): ")
+
+    while True:
+        new_placa = input("Enter new license plate (or press Enter to keep current): ")
+        if new_placa == "":
+            break
+        if len(new_placa) !=6:
+            print('Incorrect car plate')
+        else:
+            break
+
+    if new_make:
+        car.make = new_make
+    if new_model:
+        car.model = new_model
+    if new_year:
+        try:
+            car.year = int(new_year)
+        except ValueError:
+            print("Invalid year. Please enter a valid integer.")
+    if new_complaint:
+        car.complaint = new_complaint
+    if new_placa:
+        car.placa = new_placa
+
+    return car

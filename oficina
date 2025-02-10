@@ -1,0 +1,115 @@
+from cliente import Client
+from persistencia import gravar_Cliente, carregar_clientes, save_Car, upload_car
+from defs import get_cliente_information, listar_clientes, remover_cliente_por_numero, modificar_cliente, get_car_information, listar_car, remove_car_by_number, update_car_info
+
+FICHEIRO = 'clientes.txt'
+FILE = 'carros.txt'
+
+
+def main():
+    lista_clientes = carregar_clientes(FICHEIRO)
+    car_list = upload_car(FILE)
+    while True:
+        print("\nMenu:")
+        print("1. Add a new client")
+        print("2. Show client list")
+        print("3. Delete cliente")
+        print("4. Change cliente info")
+        print("5. Add a new car")
+        print("6. Show car list")
+        print("7. Delete car")
+        print("8. Update car information")
+        print("9. Exit")
+
+
+        choice = input("Choose an option: ")
+
+        if choice == "1":
+
+            new_client = get_cliente_information()
+            lista_clientes.append(new_client)
+            gravar_Cliente(FICHEIRO, lista_clientes)
+            print('The cliente wes added to clientes.txt')
+
+
+        elif choice == "2":
+            lista_clientes = carregar_clientes(FICHEIRO)
+            print("\nClient list:")
+            if not lista_clientes:
+                print("The client list is empty.")
+            else:
+                for idx, client in enumerate(lista_clientes, 1):
+                    print(f"{idx}. {client}")
+
+
+        elif choice == "3":
+            lista_clientes = carregar_clientes(FICHEIRO)
+            if not lista_clientes:
+                print("The client list is empty.")
+            else:
+                listar_clientes(lista_clientes)
+                try:
+                    number = int(input("\nEnter the number of the client to delete: "))
+                    remover_cliente_por_numero(FICHEIRO, number)
+                except ValueError:
+                    print("Invalid input. Please enter a valid number.")
+
+
+        elif choice == "4":
+            modificar_cliente(FICHEIRO)
+
+
+        elif choice == "5":
+                new_car = get_car_information()
+                car_list.append(new_car)
+                save_Car(FILE, car_list)
+                print('\nNew car was added to carros.txt')
+
+        elif choice == "6":
+                car_list = upload_car(FILE)
+                if not car_list:
+                    print("The list is empty.")
+                else:
+                    listar_car(car_list)
+
+        elif choice == "7":
+                car_list = upload_car(FILE)
+                if not car_list:
+                    print("The list is empty.")
+                else:
+                    listar_car(car_list)
+                    try:
+                        car_number = int(input("Enter the number of the car to delete: "))
+                        remove_car_by_number(FILE, car_number)
+                    except ValueError:
+                        print("Invalid input. Please enter a valid number.")
+
+        elif choice == "8":
+                car_list = upload_car(FILE)
+                if not car_list:
+                    print("The list is empty.")
+                else:
+                    listar_car(car_list)
+                    try:
+                        car_number = int(input("Enter the number of the car to update: "))
+                        if 1 <= car_number <= len(car_list):
+                            updated_car = update_car_info(car_list[car_number - 1])
+                            car_list[car_number - 1] = updated_car
+                            save_Car(FILE, car_list)
+                            print(f"\nCar {car_number} was updated successfully.")
+                        else:
+                            print(f"\nInvalid car number. Please enter a number between 1 and {len(car_list)}.")
+                    except ValueError:
+                        print("Invalid input. Please enter a valid number.")
+        elif choice == "9":
+
+            print("Goodbye!")
+            break
+        else:
+            print('Invalid Number, please try again')
+
+
+
+
+if __name__ == "__main__":
+    main()
