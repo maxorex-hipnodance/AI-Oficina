@@ -1,21 +1,369 @@
 import tkinter as tk
 
+from cliente import Client
+from car import Car
+from persistencia import gravar_Cliente, carregar_clientes, save_Car, upload_car
+from defs import get_cliente_information, listar_clientes, remover_cliente_por_numero, modificar_cliente, get_car_information, listar_car, remove_car_by_number, update_car_info
 
-def listar_clientes_programm(root, clients):
+FICHEIRO = 'clientes.txt'
+FILE = 'carros.txt'
+
+def get_cliente_information_programm(root):
+    import tkinter as tk
+    from tkinter import messagebox
+
+    def close_new_window():
+        root.deiconify()
+        new_window.destroy()
+
+    def get_cliente_information_from_Enter():
+        lista_clientes = carregar_clientes(FICHEIRO)
+
+        # Отримуємо дані з текстових полів
+        nome = entry_nome.get()
+        carro = entry_carro.get()
+        placa = entry_placa.get()
+        email = entry_email.get()
+        phone_number = entry_phone_number.get()
+        addres = entry_addres.get()
+
+        # Перевірки введених даних
+        if not nome.replace(" ", "").isalpha():
+            messagebox.showerror("Error", "Please insert your name correctly (only letters and spaces allowed)")
+            return
+
+        if addres == '':
+            messagebox.showerror('Error', 'Please insert you addres')
+            return
+
+        if carro == '':
+            messagebox.showerror('Error', 'Please insert you car make')
+            return
+
+        if len(placa) != 6:
+            messagebox.showerror("Error", "Incorrect car plate")
+            return
+
+        if '@gmail.com' not in email and '@hotmail.com' not in email:
+            messagebox.showerror("Error", "Email invalid")
+            return
+
+        if not phone_number.isdigit() or len(phone_number) != 9:
+            messagebox.showerror("Error", "Phone number must contain 9 digits")
+            return
+
+        # Якщо всі перевірки пройдено, створюємо об'єкт Client
+        new_client = Client(nome, carro, placa, email, phone_number, addres)
+        lista_clientes.append(new_client)
+        gravar_Cliente(FICHEIRO, lista_clientes)
+        # Виводимо успішне повідомлення
+        messagebox.showinfo("Success", f"Client {nome} has been added successfully!")
+
+        # Очистка полів після введення
+        entry_nome.delete(0, tk.END)
+        entry_carro.delete(0, tk.END)
+        entry_placa.delete(0, tk.END)
+        entry_email.delete(0, tk.END)
+        entry_phone_number.delete(0, tk.END)
+        entry_addres.delete(0, tk.END)
+
+    root.withdraw()
+    # Створення головного вікна
     new_window = tk.Toplevel(root)
-    new_window.title("cliente list")
+    new_window.title("Cliente registration")
+    new_window.geometry("400x530")
+    new_window.config(bg='#222831')
+
+    # Створення міток і полів вводу
+    label_nome = tk.Label(new_window, text="Name:", bg='#222831', fg="#00FFF5")
+    label_nome.pack(pady=5)
+    entry_nome = tk.Entry(new_window, bd=5, relief='flat', bg='#222831',fg="white", highlightbackground='#00FFF5', highlightcolor="lime", highlightthickness=2)
+    entry_nome.pack(pady=5)
+
+    label_carro = tk.Label(new_window, text="Car Make:", bg='#222831', fg="#00FFF5")
+    label_carro.pack(pady=5)
+    entry_carro = tk.Entry(new_window, bd=5, relief='flat', bg='#222831',fg="white", highlightbackground='#00FFF5', highlightcolor="lime", highlightthickness=2)
+    entry_carro.pack(pady=5)
+
+    label_placa = tk.Label(new_window, text="Car Plate:", bg='#222831', fg="#00FFF5")
+    label_placa.pack(pady=5)
+    entry_placa = tk.Entry(new_window, bd=5, relief='flat', bg='#222831', fg="white", highlightbackground='#00FFF5', highlightcolor="lime", highlightthickness=2)
+    entry_placa.pack(pady=5)
+
+    label_email = tk.Label(new_window, text="Email Address:", bg='#222831', fg="#00FFF5")
+    label_email.pack(pady=5)
+    entry_email = tk.Entry(new_window, bd=5, relief='flat', bg='#222831', fg="white", highlightbackground='#00FFF5', highlightcolor="lime", highlightthickness=2)
+    entry_email.pack(pady=5)
+
+    label_phone_number = tk.Label(new_window, text="Phone Number:", bg='#222831', fg="#00FFF5")
+    label_phone_number.pack(pady=5)
+    entry_phone_number = tk.Entry(new_window, bd=5, relief='flat', bg='#222831', fg="white", highlightbackground='#00FFF5', highlightcolor="lime", highlightthickness=2)
+    entry_phone_number.pack(pady=5)
+
+    label_addres = tk.Label(new_window, text="Address:", bg='#222831', fg="#00FFF5")
+    label_addres.pack(pady=5)
+    entry_addres = tk.Entry(new_window, bg='#222831', fg="white", bd=5, relief='flat', highlightbackground='#00FFF5', highlightcolor="lime", highlightthickness=2)
+    entry_addres.pack(pady=5)
+
+    # Кнопка для надсилання форми
+    button_submit = tk.Button(new_window, text="Submit", command=get_cliente_information_from_Enter, bg='#393E46', fg="#00FFF5", activebackground='lime' )
+    button_submit.pack(pady=15)
+
+    button_close = tk.Button(new_window, text='Close',command=close_new_window, bg='red', activebackground='lime')
+    button_close.pack(pady=10)
+def get_car_information_programm(root):
+    import tkinter as tk
+    from tkinter import messagebox
+
+    def close_new_window():
+        root.deiconify()
+        new_window.destroy()
+
+    def get_car_information_from_Enter():
+        car_list = upload_car(FILE)
+
+        # Отримуємо дані з текстових полів
+        make = entry_make.get()
+        model = entry_model.get()
+        year = entry_year.get()
+        plate = entry_plate.get()
+        complaint = entry_complaint.get()
+
+
+        # Перевірки введених даних
+        if not make.replace(" ", "").isalpha():
+            messagebox.showerror("Error", "Please insert your name correctly (only letters and spaces allowed)")
+            return
+
+        if model == '':
+            messagebox.showerror('Error', 'Please insert you addres')
+            return
+
+        if year == '':
+            messagebox.showerror('Error', 'Please insert you car make')
+            return
+
+        if len(plate) != 6:
+            messagebox.showerror("Error", "Incorrect car plate")
+            return
+
+        # Якщо всі перевірки пройдено, створюємо об'єкт Client
+        new_car = Car(make, model, year, plate, complaint)
+        car_list.append(new_car)
+        save_Car(FILE, car_list)
+        # Виводимо успішне повідомлення
+        messagebox.showinfo("Success", f"Car {make} has been added successfully!")
+
+        # Очистка полів після введення
+        entry_make.delete(0, tk.END)
+        entry_model.delete(0, tk.END)
+        entry_year.delete(0, tk.END)
+        entry_plate.delete(0, tk.END)
+        entry_complaint.delete(0, tk.END)
+
+
+    root.withdraw()
+    # Створення головного вікна
+    new_window = tk.Toplevel(root)
+    new_window.title("Car registration")
+    new_window.geometry("400x530")
+    new_window.config(bg='#222831')
+
+    # Створення міток і полів вводу
+    label_make = tk.Label(new_window, text="make:", bg='#222831', fg="#00FFF5")
+    label_make.pack(pady=5)
+    entry_make = tk.Entry(new_window, bd=5, relief='flat', bg='#222831',fg="white", highlightbackground='#00FFF5', highlightcolor="lime", highlightthickness=2)
+    entry_make.pack(pady=5)
+
+    label_model = tk.Label(new_window, text="model:", bg='#222831', fg="#00FFF5")
+    label_model.pack(pady=5)
+    entry_model = tk.Entry(new_window, bd=5, relief='flat', bg='#222831',fg="white", highlightbackground='#00FFF5', highlightcolor="lime", highlightthickness=2)
+    entry_model.pack(pady=5)
+
+    label_year = tk.Label(new_window, text="Year:", bg='#222831', fg="#00FFF5")
+    label_year.pack(pady=5)
+    entry_year = tk.Entry(new_window, bd=5, relief='flat', bg='#222831', fg="white", highlightbackground='#00FFF5', highlightcolor="lime", highlightthickness=2)
+    entry_year.pack(pady=5)
+
+    label_plate = tk.Label(new_window, text="Plate:", bg='#222831', fg="#00FFF5")
+    label_plate.pack(pady=5)
+    entry_plate = tk.Entry(new_window, bd=5, relief='flat', bg='#222831', fg="white", highlightbackground='#00FFF5', highlightcolor="lime", highlightthickness=2)
+    entry_plate.pack(pady=5)
+
+    label_complaint = tk.Label(new_window, text="Complaint:", bg='#222831', fg="#00FFF5")
+    label_complaint.pack(pady=5)
+    entry_complaint = tk.Entry(new_window, bd=5, relief='flat', bg='#222831', fg="white", highlightbackground='#00FFF5', highlightcolor="lime", highlightthickness=2)
+    entry_complaint.pack(pady=5)
+
+    # Кнопка для надсилання форми
+    button_submit = tk.Button(new_window, text="Submit", command=get_car_information_from_Enter, bg='#393E46', fg="#00FFF5", activebackground='lime' )
+    button_submit.pack(pady=15)
+
+    button_close = tk.Button(new_window, text='Close',command=close_new_window, bg='red', activebackground='lime')
+    button_close.pack(pady=10)
+
+def listar_clientes_programm(root):
+
+    lista_clientes = carregar_clientes(FICHEIRO)
+
+    new_window = tk.Toplevel(root)
+    new_window.title("Cliente list")
     new_window.geometry("600x300")
 
-    frame = tk.Frame(new_window)
-    frame.pack(pady=10, fill='both', expand=True)
+    frame = tk.Frame(new_window, bg = '#393E46')
+    frame.pack(fill='both', expand=True)
 
     vbar = tk.Scrollbar(frame, orient='vertical')
     vbar.pack(side='right', fill='y')
 
-    listbox = tk.Listbox(frame, height=20, width=100,yscrollcommand=vbar.set)
-    listbox.pack(pady=10)
+    listbox = tk.Listbox(frame, height=20, width=50, yscrollcommand=vbar.set, bg='#393E46', fg='#00FFF5', font=("Arial", 12), relief="flat", borderwidth=0, highlightthickness=0)
+    listbox.pack(side='top',fill='both', expand=True)
 
     vbar.config(command=listbox.yview)
 
-    for i, client in enumerate(clients, start=1):
-        listbox.insert(tk.END, f"{i}. {client}")
+    for i, clients in enumerate(lista_clientes, start=1):
+        listbox.insert(tk.END, f"{i}. {clients}")
+def listar_car_programm(root):
+
+    car_list = upload_car(FILE)
+
+    new_window = tk.Toplevel(root)
+    new_window.title("Car list")
+    new_window.geometry("600x300")
+    new_window.config(bg='#393E46')
+
+    frame = tk.Frame(new_window, bg = '#393E46')
+    frame.pack(fill='both', expand=True)
+
+    vbar = tk.Scrollbar(frame, orient='vertical')
+    vbar.pack(side='right', fill='y')
+
+    listbox = tk.Listbox(frame, height=20, width=50, yscrollcommand=vbar.set, bg='#393E46', fg='#00FFF5', font=("Arial", 12), relief="flat", borderwidth=0, highlightthickness=0)
+    listbox.pack(side='top',fill='both', expand=True)
+
+    vbar.config(command=listbox.yview)
+
+    for i, car_name in enumerate(car_list, start=1):
+        listbox.insert(tk.END, f"{i}. {car_name}")
+
+def deleat_client_programm(root):
+    import tkinter as tk
+    from tkinter import ttk, messagebox
+
+    def close_new_window():
+        root.deiconify()
+        new_window.destroy()
+
+    def listar_clients_inside_delclient():
+            lista_clientes = carregar_clientes(FICHEIRO)
+            listbox.delete(0, tk.END)
+            for i, clients in enumerate(lista_clientes, start=1):
+                listbox.insert(tk.END, f"{i}. {clients}")
+
+    def delete_selected():
+            try:
+                selected_index = listbox.curselection()[0]
+                clients = carregar_clientes(FICHEIRO)
+                deleted_cliente = clients.pop(selected_index)
+                gravar_Cliente(FICHEIRO, clients)
+                messagebox.showinfo("Success", f"Client '{deleted_cliente}' was successfully deleted.")
+                listbox.delete(selected_index)
+            except IndexError:
+                messagebox.showwarning("Warning", "Please select a client to delete.")
+
+    root.withdraw()
+    new_window = tk.Toplevel(root)
+    new_window.title("Delete client")
+    new_window.geometry("700x300")
+    new_window.config(bg='#393E46')
+
+    new_window.grid_rowconfigure(0, weight=1)
+    new_window.grid_rowconfigure(1, weight=0)
+    new_window.grid_columnconfigure(0, weight=1)
+    new_window.grid_columnconfigure(1, weight=1)
+
+    frame = tk.Frame(new_window, bg='#393E46')
+    frame.grid(row=0, column=0, sticky='nsew', padx=10, pady=10, columnspan=2)
+
+    frame.grid_rowconfigure(0, weight=1)
+    frame.grid_columnconfigure(0, weight=1)
+
+    vbar = tk.Scrollbar(frame, orient='vertical')
+    vbar.grid(row=0, column=1, sticky='ns')
+
+    listbox = tk.Listbox(frame, height=15, width=50, bg='#393E46', fg='#00FFF5',
+                             font=("Arial", 12), relief="flat", borderwidth=0, highlightthickness=1, highlightbackground='#222831', yscrollcommand=vbar.set)
+    listbox.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+
+    vbar.config(command=listbox.yview)
+
+    listar_clients_inside_delclient()
+
+    delete_button = tk.Button(new_window, text="Delete Selected Client", command=delete_selected, bg='#222831',
+                                  fg='#00FFF5', relief=tk.FLAT, font=("Arial", 12), activebackground='lime')
+    delete_button.grid(row=1, column=0, pady=10)
+
+    close_button = tk.Button(new_window, text='Close',command=close_new_window, bg='red', activebackground='lime', relief=tk.FLAT, font=("Arial", 12), fg='black')
+    close_button.grid(row=1, column=1, pady=10,)
+def deleat_car_programm(root):
+    import tkinter as tk
+    from tkinter import ttk, messagebox
+
+    def close_new_window():
+        root.deiconify()
+        new_window.destroy()
+
+    def listar_car_inside_delcar():
+            car_list = upload_car(FILE)
+            listbox.delete(0, tk.END)
+            for i, cars in enumerate(car_list, start=1):
+                listbox.insert(tk.END, f"{i}. {cars}")
+
+    def delete_selected():
+            try:
+                selected_index = listbox.curselection()[0]
+                cars = upload_car(FILE)
+                deleted_car = cars.pop(selected_index)
+                save_Car(FILE, cars)
+                messagebox.showinfo("Success", f"Client '{deleted_car}' was successfully deleted.")
+                listbox.delete(selected_index)
+            except IndexError:
+                messagebox.showwarning("Warning", "Please select a client to delete.")
+
+    root.withdraw()
+    new_window = tk.Toplevel(root)
+    new_window.title("Delete car")
+    new_window.geometry("500x300")
+    new_window.config(bg='#393E46')
+
+    new_window.grid_rowconfigure(0, weight=1)
+    new_window.grid_rowconfigure(1, weight=0)
+    new_window.grid_columnconfigure(0, weight=1)
+    new_window.grid_columnconfigure(1, weight=1)
+
+    frame = tk.Frame(new_window, bg='#393E46')
+    frame.grid(row=0, column=0, sticky='nsew', padx=10, pady=10, columnspan=2)
+
+    frame.grid_rowconfigure(0, weight=1)
+    frame.grid_columnconfigure(0, weight=1)
+
+    vbar = tk.Scrollbar(frame, orient='vertical')
+    vbar.grid(row=0, column=1, sticky='ns')
+
+    listbox = tk.Listbox(frame, height=15, width=50, bg='#393E46', fg='#00FFF5',
+                             font=("Arial", 12), relief="flat", borderwidth=0, highlightthickness=1, highlightbackground='#222831', yscrollcommand=vbar.set)
+    listbox.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+
+    vbar.config(command=listbox.yview)
+
+    listar_car_inside_delcar()
+
+    delete_button = tk.Button(new_window, text="Delete Selected Car", command=delete_selected, bg='#222831',
+                                  fg='#00FFF5', relief=tk.FLAT, font=("Arial", 12), activebackground='lime')
+    delete_button.grid(row=1, column=0, pady=10)
+
+    close_button = tk.Button(new_window, text='Close',command=close_new_window, bg='red', activebackground='lime', relief=tk.FLAT, font=("Arial", 12), fg='black')
+    close_button.grid(row=1, column=1, pady=10,)
+
+
+
