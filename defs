@@ -1,6 +1,15 @@
+from importlib.metadata import pass_none
+from PIL.ImImagePlugin import number
+from PIL.ImagePalette import random
+
 from cliente import Client
 from car import Car
 from persistencia import gravar_Cliente, carregar_clientes, save_Car, upload_car
+
+
+FICHEIRO = 'clientes.txt'
+FILE = 'carros.txt'
+
 
 #get cliente information to put it in the file 'FICHEIRO'
 def get_cliente_information():
@@ -162,6 +171,103 @@ def modificar_cliente(FICHEIRO):
     except ValueError:
         print("Please enter correct number.")
 
+#check cliente payment status
+def cliente_status(clients):
+    print("\nClient status list:")
+    for i, client in enumerate(clients, start=1):
+        print(f"{i}. {client.nome} | {client.placa} | {client.payment_status}")
+
+#change client payment status
+def cahnge_cliente_payment_status():
+    lista_clientes = carregar_clientes(FICHEIRO)
+    try:
+        change_status_variable = int(input("\nInsert number of cliente that you want to change: "))
+
+        if 1 <= change_status_variable <= len(lista_clientes):
+            selected_cliente = lista_clientes[change_status_variable - 1]
+            print(f"\nSelected cliente: {selected_cliente}")
+
+            new_status = input('new satus(Payed, not payed):').lower()
+            while True:
+                if new_status == 'payed' or new_status == 'not payed':
+                    selected_cliente.payment_status = new_status
+                    break
+                else:
+                    print('Pleas incert the correct status')
+
+            print(
+                f"\nStatus updated! {selected_cliente.nome} | {selected_cliente.placa} | {selected_cliente.payment_status}")
+
+            gravar_Cliente(FICHEIRO, lista_clientes)
+        else:
+            print('\nError: Invalid client number.')
+    except ValueError:
+        print("\nError: Please enter a valid number.")
+
+#payment procces
+def payment():
+    import random
+    import telebot
+
+    lista_clientes = carregar_clientes(FICHEIRO)
+    car_list = upload_car(FILE)
+
+    print('Welcom to payment option. \nChoose the client:')
+    listar_clientes(lista_clientes)
+    number = int(input(':'))
+
+    if 1 <= number <= len(lista_clientes):
+        selected_cliente = lista_clientes[number - 1]
+        print(f"\nSelected cliente: {selected_cliente}")
+
+    print('\nNow choose the clients car:')
+    listar_car(car_list)
+
+    number_car = int(input(':'))
+
+    if 1 <= number_car <= len(car_list):
+        selected_car = car_list[number - 1]
+        print(f"\nSelected car: {selected_car}")
+
+    price = random.randint(100,2000)
+
+    print(f'\nFor {selected_cliente.nome} and his car |{selected_car.make}|{selected_car.model}|{selected_car.plate}| the price is:{price}€')
+    pay_way = input('\nwanna pay with card/money?:').lower()
+
+
+    if pay_way == 'card':
+
+
+        TOKEN = '7711414856:AAH0D2yp8SlR3lbeT_f6WoSGPvFYwDfrcGU'
+
+        CHAT_ID = '989761372'
+
+        bot = telebot.TeleBot(TOKEN)
+
+        bot.send_message(CHAT_ID,  f"🧾 *INFORMATION ABOUT PAYMENT* 🧾\n"
+                                          f"━━━━━━━━━━━━━━━━━━━━━━━━\n"
+                                          f"👤 *Name:* `{selected_cliente.nome}`\n"
+                                          f"📧 *Email:* `{selected_cliente.email}`\n"
+                                          f"📞 *Phone:* `{selected_cliente.phone_number}`\n"
+                                          f"💰 *To pay:* `{price}€`\n"
+                                          f"━━━━━━━━━━━━━━━━━━━━━━━━\n \n"
+                                          f"✅ *Payment confirmed!* ✅\n \n"
+                                        f"━━━━━━━━━━━━━━━━━━━━━━━━\n"
+                                        f"🚗 *Car:* `{selected_car.make}`\n"
+                                        f"🚘*Model:* `{selected_car.model}`\n"
+                                        f"📅*Year:* `{selected_car.year}`\n"
+                                        f"🔢*plate:* `{selected_car.plate}`\n"
+                                        f"━━━━━━━━━━━━━━━━━━━━━━━━\n",
+                         parse_mode="Markdown")
+        del bot
+        selected_cliente.payment_status = 'payed'
+        gravar_Cliente(FICHEIRO, lista_clientes)
+
+    else:
+        pass
+
+
+
 
 
 
@@ -203,11 +309,13 @@ def get_car_information():
     complaint = complaint.replace(";", ",")
     return Car(make, model, year, plate, complaint)
 
+#car list
 def listar_car(car):
     print("\nCar list:")
     for i, car in enumerate(car, start=1):
         print(f"{i}. {car}")
 
+#delete car
 def remove_car_by_number(file, number):
 
     cars = upload_car(file)
@@ -221,6 +329,7 @@ def remove_car_by_number(file, number):
     else:
         print(f"\nNumber {number} is incorrect. Try again.")
 
+#update car info
 def update_car_info(car):
     print(f"\nCurrent car information:\n{car}")
 
@@ -272,3 +381,4 @@ def update_car_info(car):
         car.placa = new_placa
 
     return car
+
