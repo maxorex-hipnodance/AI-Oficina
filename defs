@@ -2,6 +2,7 @@ from importlib.metadata import pass_none
 from PIL.ImImagePlugin import number
 from PIL.ImagePalette import random
 
+
 from cliente import Client
 from car import Car
 from persistencia import gravar_Cliente, carregar_clientes, save_Car, upload_car
@@ -180,29 +181,32 @@ def cliente_status(clients):
 #change client payment status
 def cahnge_cliente_payment_status():
     lista_clientes = carregar_clientes(FICHEIRO)
+
     try:
-        change_status_variable = int(input("\nInsert number of cliente that you want to change: "))
+            change_status_variable = int(input("\nInsert number of cliente that you want to change: "))
 
-        if 1 <= change_status_variable <= len(lista_clientes):
-            selected_cliente = lista_clientes[change_status_variable - 1]
-            print(f"\nSelected cliente: {selected_cliente}")
+            if 1 <= change_status_variable <= len(lista_clientes):
+                selected_cliente = lista_clientes[change_status_variable - 1]
+                print(f"\nSelected cliente: {selected_cliente}")
 
-            new_status = input('new satus(Payed, not payed):').lower()
-            while True:
-                if new_status == 'payed' or new_status == 'not payed':
-                    selected_cliente.payment_status = new_status
-                    break
-                else:
-                    print('Pleas incert the correct status')
 
-            print(
-                f"\nStatus updated! {selected_cliente.nome} | {selected_cliente.placa} | {selected_cliente.payment_status}")
+                while True:
+                    new_status = input('new satus(Payed, not payed):').lower()
+                    if new_status == 'payed' or new_status == 'not payed':
+                        selected_cliente.payment_status = new_status
+                        break
+                    else:
+                        print('Pleas incert the correct status')
 
-            gravar_Cliente(FICHEIRO, lista_clientes)
-        else:
-            print('\nError: Invalid client number.')
+                print(
+                    f"\nStatus updated! {selected_cliente.nome} | {selected_cliente.placa} | {selected_cliente.payment_status}")
+
+                gravar_Cliente(FICHEIRO, lista_clientes)
+            else:
+                print('\nError: Invalid client number.')
     except ValueError:
-        print("\nError: Please enter a valid number.")
+            print("\nError: Please enter a valid number.")
+
 
 #payment procces
 def payment():
@@ -214,37 +218,54 @@ def payment():
 
     print('Welcom to payment option. \nChoose the client:')
     listar_clientes(lista_clientes)
-    number = int(input(':'))
 
-    if 1 <= number <= len(lista_clientes):
-        selected_cliente = lista_clientes[number - 1]
-        print(f"\nSelected cliente: {selected_cliente}")
+
+    while True:
+        try:
+            number = int(input('PLease insert cliente number:'))
+            if 1 <= number <= len(lista_clientes):
+                selected_cliente = lista_clientes[number - 1]
+                print(f"\nSelected cliente: {selected_cliente}")
+                break
+            else:
+                print("Invalid number")
+        except ValueError:
+            print('invalid input')
+
+
+
 
     print('\nNow choose the clients car:')
     listar_car(car_list)
-
-    number_car = int(input(':'))
-
-    if 1 <= number_car <= len(car_list):
-        selected_car = car_list[number - 1]
-        print(f"\nSelected car: {selected_car}")
+    while True:
+        try:
+            number_car = int(input('Please insert car number:'))
+            if 1 <= number_car <= len(car_list):
+                selected_car = car_list[number - 1]
+                print(f"\nSelected car: {selected_car}")
+                break
+            else:
+                print('invalid number')
+        except ValueError:
+            print('invalid input')
 
     price = random.randint(100,2000)
 
     print(f'\nFor {selected_cliente.nome} and his car |{selected_car.make}|{selected_car.model}|{selected_car.plate}| the price is:{price}€')
-    pay_way = input('\nwanna pay with card/money?:').lower()
 
 
-    if pay_way == 'card':
+    while True:
+        pay_way = input('\nwanna pay with card/cash?:').lower()
+        if pay_way == 'card' or pay_way == 'cash':
 
 
-        TOKEN = '7711414856:AAH0D2yp8SlR3lbeT_f6WoSGPvFYwDfrcGU'
+            TOKEN = '7711414856:AAH0D2yp8SlR3lbeT_f6WoSGPvFYwDfrcGU'
 
-        CHAT_ID = '989761372'
+            CHAT_ID = '989761372'
 
-        bot = telebot.TeleBot(TOKEN)
+            bot = telebot.TeleBot(TOKEN)
 
-        bot.send_message(CHAT_ID,  f"🧾 *INFORMATION ABOUT PAYMENT* 🧾\n"
+            bot.send_message(CHAT_ID,  f"🧾 *INFORMATION ABOUT PAYMENT* 🧾\n"
                                           f"━━━━━━━━━━━━━━━━━━━━━━━━\n"
                                           f"👤 *Name:* `{selected_cliente.nome}`\n"
                                           f"📧 *Email:* `{selected_cliente.email}`\n"
@@ -259,12 +280,14 @@ def payment():
                                         f"🔢*plate:* `{selected_car.plate}`\n"
                                         f"━━━━━━━━━━━━━━━━━━━━━━━━\n",
                          parse_mode="Markdown")
-        del bot
-        selected_cliente.payment_status = 'payed'
-        gravar_Cliente(FICHEIRO, lista_clientes)
 
-    else:
-        pass
+            del bot
+            selected_cliente.payment_status = 'payed'
+            gravar_Cliente(FICHEIRO, lista_clientes)
+            break
+
+        else:
+            print('\nWrong input, pleas insert your payment method( card or cash )')
 
 
 
@@ -381,4 +404,44 @@ def update_car_info(car):
         car.placa = new_placa
 
     return car
+
+#car status
+def car_status(cars):
+    print("\nCars status:")
+    for i, car in enumerate(cars, start=1):
+        print(f"{i}. {car.make} | {car.model} | {car.plate} | {car.car_status}")
+
+#change car status
+def change_car_status(FILE):
+    cars = upload_car(FILE)
+    if not cars:
+        print("The car list is empty.")
+        return
+
+    car_status(cars)
+
+    try:
+        number = int(input("\nEnter the number of the car to change status: "))
+        if 1 <= number <= len(cars):
+            selected_car = cars[number - 1]
+            print(f"\nSelected car: {selected_car}")
+
+            while True:
+                new_status = input(
+                    f"New status for {selected_car.make} {selected_car.model} (e.g., 'in queue', 'in repair', 'completed'): ")
+                if new_status.strip():  # Check if not empty
+                    selected_car.car_status = new_status
+                    break
+                else:
+                    print("Status cannot be empty. Please enter a valid status.")
+
+            cars[number - 1] = selected_car  # Update in the list
+            save_Car(FILE, cars)  # Save the updated list to the file
+            print(f"\nCar status updated to '{new_status}' for {selected_car.make} {selected_car.model}.")
+
+        else:
+            print(f"Invalid car number. Please enter a number between 1 and {len(cars)}.")
+
+    except ValueError:
+        print("Invalid input. Please enter a valid number.")
 
