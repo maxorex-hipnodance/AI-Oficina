@@ -1,15 +1,19 @@
-class Car:
-    def __init__(self, make, model, year, plate, complaint):
-        self.make = make
-        self.model = model
-        self.year = year
-        self.plate = plate
-        self.complaint = complaint
+class Client:
+    def __init__(self, nome, carro, placa, email, phone_number, addres, payment_status = 'not payed'):
+        self.nome = nome
+        self.carro = carro
+        self.placa = placa
+        self.email = email
+        self.phone_number = phone_number
+        self.addres = addres
+        self.payment_status=payment_status
+
+
 
     def __str__(self):
-        return f'{self.make};{self.model};{self.year};{self.plate};{self.complaint}'
+        return f"{self.nome};{self.carro};{self.placa};{self.email};{self.phone_number};{self.addres};{self.payment_status}"
 
     @staticmethod
     def from_string(data_str):
-        make, model, year, plate, complaint = data_str.strip().split(';')
-        return Car(make, model, int(year), plate, complaint)
+        nome, carro, placa, email, phone_number, addres, payment_status= data_str.strip().split(';')
+        return Client(nome, carro, placa, email, phone_number, addres, payment_status)
