@@ -1,17 +1,17 @@
 from cliente import Client
 from car import Car
 
+#client
 def gravar_Cliente(ficheiro, lista_clientes):
     with open(ficheiro, 'w') as f:
         for cliente in lista_clientes:
             f.write(str(cliente)+ '\n')
 
 
-
-def carregar_clientes(ficheiro):
+def carregar_clientes(FICHEIRO):
     clientes = []
     try:
-        with open(ficheiro, 'r') as f:
+        with open(FICHEIRO, 'r') as f:
             for linha in f:
                 cliente = Client.from_string(linha)
                 clientes.append(cliente)
@@ -36,7 +36,7 @@ def upload_car(file):
             for line in f:
                 car = Car.from_string(line)
                 cars.append(car)
-        print(f'Cars uploaded de {file} successfully.')
+
     except FileNotFoundError:
         print (f'File {file} was not found.')
     return cars
