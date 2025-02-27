@@ -1,6 +1,16 @@
+from importlib.metadata import pass_none
+from PIL.ImImagePlugin import number
+from PIL.ImagePalette import random
+
+
 from cliente import Client
-from persistencia import gravar_Cliente, carregar_clientes, save_Car, upload_car
 from car import Car
+from persistencia import gravar_Cliente, carregar_clientes, save_Car, upload_car
+
+
+FICHEIRO = 'clientes.txt'
+FILE = 'carros.txt'
+
 
 #get cliente information to put it in the file 'FICHEIRO'
 def get_cliente_information():
@@ -10,17 +20,17 @@ def get_cliente_information():
         if nome.replace(" ", "").isalpha():
             break
         else:
-            print('Pleas insert your name correctly')
+            print('Pleas insert your name correctly (only letters and spaces allowed)')
 
-    carro = input('Car model: ')
+    carro = input('Car make: ')
     while True:
         placa = input('Car plate: ')
         if len(placa) !=6:
-            print('Uncorrect car plate')
+            print('Incorrect car plate')
         else:
             break
     while True:
-        email = input('Email addres: ')
+        email = input('Email address: ')
         if '@gmail.com' in email or '@hotmail.com' in email:
             break
         else:
@@ -30,11 +40,11 @@ def get_cliente_information():
         if not phone_number.isdigit():
             print('Please insert correct phone number')
         elif len(phone_number) != 9:
-            print('Phone number must contein 9 numbers')
+            print('Phone number must contain 9 numbers')
         else:
             break
 
-    addres = input('Addres: ')
+    addres = input('Address: ')
 
     return Client(nome, carro, placa, email, phone_number, addres)
 
@@ -52,7 +62,6 @@ def remover_cliente_por_numero(FICHEIRO, number):
     if not clients:
         print("The list is empty")
         return
-
 
     if 1 <= number <= len(clients):
         deleted_cliente = clients.pop(number - 1)
@@ -75,7 +84,7 @@ def modificar_cliente(FICHEIRO):
 
     try:
 
-        number = int(input("\nInsert number of cliente wich need to change: "))
+        number = int(input("\nInsert number of cliente that you want to change: "))
 
         if 1 <= number <= len(clientes):
             selected_cliente = clientes[number - 1]
@@ -89,7 +98,7 @@ def modificar_cliente(FICHEIRO):
                 print("3. Car plate")
                 print("4. Email")
                 print("5. Phone number")
-                print("6. Addres")
+                print("6. Address")
                 print("7. Save changes")
 
                 option = input("Choose option: ")
@@ -142,10 +151,10 @@ def modificar_cliente(FICHEIRO):
                         selected_cliente.phone_number = new_value
                         print("Phone number is chenged.")
                 elif option == "6":
-                    new_value = input(f"New addres (Now: {selected_cliente.addres}): ")
-                    if new_value.strip():
-                        selected_cliente.addres = new_value
-                        print("Addres is chenged.")
+                        new_value = input(f"New addres (Now: {selected_cliente.addres}): ")
+                        if new_value.strip():
+                            selected_cliente.addres = new_value
+                            print("Addres is chenged.")
                 elif option == "7":
 
                     print("Changing is finiched.")
@@ -156,37 +165,180 @@ def modificar_cliente(FICHEIRO):
             clientes[number - 1] = selected_cliente
 
             gravar_Cliente(FICHEIRO, clientes)
-            print("\nChanges are sasved.")
+            print("\nChanges are saved.")
         else:
             print(f"Number {number} incorrect. Try again.")
 
     except ValueError:
         print("Please enter correct number.")
 
+#check cliente payment status
+def cliente_status(clients):
+    print("\nClient status list:")
+    for i, client in enumerate(clients, start=1):
+        print(f"{i}. {client.nome} | {client.placa} | {client.payment_status}")
+
+#change client payment status
+def cahnge_cliente_payment_status():
+    lista_clientes = carregar_clientes(FICHEIRO)
+
+    try:
+            change_status_variable = int(input("\nInsert number of cliente that you want to change: "))
+
+            if 1 <= change_status_variable <= len(lista_clientes):
+                selected_cliente = lista_clientes[change_status_variable - 1]
+                print(f"\nSelected cliente: {selected_cliente}")
+
+
+                while True:
+                    new_status = input('new satus(Payed, not payed):').lower()
+                    if new_status == 'payed' or new_status == 'not payed':
+                        selected_cliente.payment_status = new_status
+                        break
+                    else:
+                        print('Pleas incert the correct status')
+
+                print(
+                    f"\nStatus updated! {selected_cliente.nome} | {selected_cliente.placa} | {selected_cliente.payment_status}")
+
+                gravar_Cliente(FICHEIRO, lista_clientes)
+            else:
+                print('\nError: Invalid client number.')
+    except ValueError:
+            print("\nError: Please enter a valid number.")
+
+
+#payment procces
+def payment():
+    import random
+    import telebot
+
+    lista_clientes = carregar_clientes(FICHEIRO)
+    car_list = upload_car(FILE)
+
+    print('Welcom to payment option. \nChoose the client:')
+    listar_clientes(lista_clientes)
+
+
+    while True:
+        try:
+            number = int(input('PLease insert cliente number:'))
+            if 1 <= number <= len(lista_clientes):
+                selected_cliente = lista_clientes[number - 1]
+                print(f"\nSelected cliente: {selected_cliente}")
+                break
+            else:
+                print("Invalid number")
+        except ValueError:
+            print('invalid input')
 
 
 
+
+    print('\nNow choose the clients car:')
+    listar_car(car_list)
+    while True:
+        try:
+            number_car = int(input('Please insert car number:'))
+            if 1 <= number_car <= len(car_list):
+                selected_car = car_list[number - 1]
+                print(f"\nSelected car: {selected_car}")
+                break
+            else:
+                print('invalid number')
+        except ValueError:
+            print('invalid input')
+
+    price = random.randint(100,2000)
+
+    print(f'\nFor {selected_cliente.nome} and his car |{selected_car.make}|{selected_car.model}|{selected_car.plate}| the price is:{price}€')
+
+
+    while True:
+        pay_way = input('\nwanna pay with card/cash?:').lower()
+        if pay_way == 'card' or pay_way == 'cash':
+
+
+            TOKEN = '7711414856:AAH0D2yp8SlR3lbeT_f6WoSGPvFYwDfrcGU'
+
+            CHAT_ID = '989761372'
+
+            bot = telebot.TeleBot(TOKEN)
+
+            bot.send_message(CHAT_ID,  f"🧾 *INFORMATION ABOUT PAYMENT* 🧾\n"
+                                          f"━━━━━━━━━━━━━━━━━━━━━━━━\n"
+                                          f"👤 *Name:* `{selected_cliente.nome}`\n"
+                                          f"📧 *Email:* `{selected_cliente.email}`\n"
+                                          f"📞 *Phone:* `{selected_cliente.phone_number}`\n"
+                                          f"💰 *To pay:* `{price}€`\n"
+                                          f"━━━━━━━━━━━━━━━━━━━━━━━━\n \n"
+                                          f"✅ *Payment confirmed!* ✅\n \n"
+                                        f"━━━━━━━━━━━━━━━━━━━━━━━━\n"
+                                        f"🚗 *Car:* `{selected_car.make}`\n"
+                                        f"🚘*Model:* `{selected_car.model}`\n"
+                                        f"📅*Year:* `{selected_car.year}`\n"
+                                        f"🔢*plate:* `{selected_car.plate}`\n"
+                                        f"━━━━━━━━━━━━━━━━━━━━━━━━\n",
+                         parse_mode="Markdown")
+
+            del bot
+            selected_cliente.payment_status = 'payed'
+            gravar_Cliente(FICHEIRO, lista_clientes)
+            break
+
+        else:
+            print('\nWrong input, pleas insert your payment method( card or cash )')
+
+
+
+
+
+
+# car defenitions
 def get_car_information():
     print('\nPlease insert your car information below.')
-    make = input('Make: ')
-    model = input('Model: ')
+
+    while True:
+        make = input('Car Make: ')
+        if make.replace(" ", "").isalpha():
+            break
+        else:
+            print('Please insert car make correctly (only letters and spaces allowed)')
+
+    while True:
+        model = input('Car Model: ')
+        if model.replace(" ", "").isalnum():
+            break
+        else:
+            print('Please insert car make correctly (only letters, numbers and spaces are allowed)')
 
     while True:
         try:
             year = int(input('Year: '))
-            break
+            if 1000 <= year <= 9999:
+                break
+            else:
+                print("Invalid year.")
         except ValueError:
-            print("Invalid year. Please enter a valid integer.")
+            print("Invalid year")
+    while True:
+        plate = input('License Plate: ')
+        if len(plate) !=6:
+            print('Invalid License plate')
+        else:
+            break
 
-    plate = input('License Plate: ')
     complaint = input('Complaint: ')
+    complaint = complaint.replace(";", ",")
     return Car(make, model, year, plate, complaint)
 
+#car list
 def listar_car(car):
-    print("\nClient list:")
+    print("\nCar list:")
     for i, car in enumerate(car, start=1):
         print(f"{i}. {car}")
 
+#delete car
 def remove_car_by_number(file, number):
 
     cars = upload_car(file)
@@ -200,13 +352,42 @@ def remove_car_by_number(file, number):
     else:
         print(f"\nNumber {number} is incorrect. Try again.")
 
+#update car info
 def update_car_info(car):
     print(f"\nCurrent car information:\n{car}")
-    new_make = input("Enter new make (or press Enter to keep current): ")
+
+    while True:
+        new_make = input("Enter new make (or press Enter to keep current): ")
+        if new_make.replace(" ", "").isalpha():
+            break
+        elif new_make == "":
+            break
+        else:
+            print('Please insert car make correctly (only letters and spaces allowed)')
+
     new_model = input("Enter new model (or press Enter to keep current): ")
-    new_year = input("Enter new year (or press Enter to keep current): ")
+
+    while True:
+        new_year = input('Enter new year (or press Enter to keep current): ')
+        if new_year == "":
+            break
+        if not new_year.isdigit():
+            print('Please insert correct year')
+        elif len(new_year) != 4:
+            print('Year must contain 4 numbers')
+        else:
+            break
+
     new_complaint = input("Enter new complaint (or press Enter to keep current): ")
-    new_plate = input("Enter new license plate (or press Enter to keep current): ")
+
+    while True:
+        new_placa = input("Enter new license plate (or press Enter to keep current): ")
+        if new_placa == "":
+            break
+        if len(new_placa) !=6:
+            print('Incorrect car plate')
+        else:
+            break
 
     if new_make:
         car.make = new_make
@@ -219,9 +400,48 @@ def update_car_info(car):
             print("Invalid year. Please enter a valid integer.")
     if new_complaint:
         car.complaint = new_complaint
-    if new_plate:
-        car.plate = new_plate
+    if new_placa:
+        car.placa = new_placa
 
     return car
 
+#car status
+def car_status(cars):
+    print("\nCars status:")
+    for i, car in enumerate(cars, start=1):
+        print(f"{i}. {car.make} | {car.model} | {car.plate} | {car.car_status}")
+
+#change car status
+def change_car_status(FILE):
+    cars = upload_car(FILE)
+    if not cars:
+        print("The car list is empty.")
+        return
+
+    car_status(cars)
+
+    try:
+        number = int(input("\nEnter the number of the car to change status: "))
+        if 1 <= number <= len(cars):
+            selected_car = cars[number - 1]
+            print(f"\nSelected car: {selected_car}")
+
+            while True:
+                new_status = input(
+                    f"New status for {selected_car.make} {selected_car.model} (e.g., 'in queue', 'in repair', 'completed'): ")
+                if new_status.strip():  # Check if not empty
+                    selected_car.car_status = new_status
+                    break
+                else:
+                    print("Status cannot be empty. Please enter a valid status.")
+
+            cars[number - 1] = selected_car  # Update in the list
+            save_Car(FILE, cars)  # Save the updated list to the file
+            print(f"\nCar status updated to '{new_status}' for {selected_car.make} {selected_car.model}.")
+
+        else:
+            print(f"Invalid car number. Please enter a number between 1 and {len(cars)}.")
+
+    except ValueError:
+        print("Invalid input. Please enter a valid number.")
 
