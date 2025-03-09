@@ -1,5 +1,6 @@
 import tkinter as tk
 
+from PIL.ImageChops import soft_light
 from cliente import Client
 from car import Car
 from persistencia import gravar_Cliente, carregar_clientes, save_Car, upload_car
@@ -17,7 +18,10 @@ def get_cliente_information_programm(root):
         new_window.destroy()
 
     def get_cliente_information_from_Enter():
+        import re
         lista_clientes = carregar_clientes(FICHEIRO)
+        email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+
 
         # Отримуємо дані з текстових полів
         nome = entry_nome.get()
@@ -32,23 +36,23 @@ def get_cliente_information_programm(root):
             messagebox.showerror("Error", "Please insert your name correctly (only letters and spaces allowed)")
             return
 
-        if addres == '':
-            messagebox.showerror('Error', 'Please insert you addres')
+        if addres.strip() == '':
+            messagebox.showerror('Error', 'Please insert you addresі')
             return
 
         if carro == '':
             messagebox.showerror('Error', 'Please insert you car make')
             return
 
-        if len(placa) != 6:
+        if  not placa.isalnum() or len(placa) != 6:
             messagebox.showerror("Error", "Incorrect car plate")
             return
 
-        if '@gmail.com' not in email and '@hotmail.com' not in email:
+        if not re.match(email_pattern, email):
             messagebox.showerror("Error", "Email invalid")
             return
 
-        if not phone_number.isdigit() or len(phone_number) != 9:
+        if not phone_number.strip().isdigit() or len(phone_number) != 9:
             messagebox.showerror("Error", "Phone number must contain 9 digits")
             return
 
@@ -71,45 +75,45 @@ def get_cliente_information_programm(root):
     # Створення головного вікна
     new_window = tk.Toplevel(root)
     new_window.title("Cliente registration")
-    new_window.geometry("400x530")
+    new_window.geometry("400x580")
     new_window.config(bg='#222831')
 
     # Створення міток і полів вводу
-    label_nome = tk.Label(new_window, text="Name:", bg='#222831', fg="#00FFF5")
+    label_nome = tk.Label(new_window, text="Name:", bg='#222831', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
     label_nome.pack(pady=5)
     entry_nome = tk.Entry(new_window, bd=5, relief='flat', bg='#222831',fg="white", highlightbackground='#00FFF5', highlightcolor="lime", highlightthickness=2)
     entry_nome.pack(pady=5)
 
-    label_carro = tk.Label(new_window, text="Car Make:", bg='#222831', fg="#00FFF5")
+    label_carro = tk.Label(new_window, text="Car Make:", bg='#222831', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
     label_carro.pack(pady=5)
     entry_carro = tk.Entry(new_window, bd=5, relief='flat', bg='#222831',fg="white", highlightbackground='#00FFF5', highlightcolor="lime", highlightthickness=2)
     entry_carro.pack(pady=5)
 
-    label_placa = tk.Label(new_window, text="Car Plate:", bg='#222831', fg="#00FFF5")
+    label_placa = tk.Label(new_window, text="Car Plate:", bg='#222831', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
     label_placa.pack(pady=5)
     entry_placa = tk.Entry(new_window, bd=5, relief='flat', bg='#222831', fg="white", highlightbackground='#00FFF5', highlightcolor="lime", highlightthickness=2)
     entry_placa.pack(pady=5)
 
-    label_email = tk.Label(new_window, text="Email Address:", bg='#222831', fg="#00FFF5")
+    label_email = tk.Label(new_window, text="Email Address:", bg='#222831', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
     label_email.pack(pady=5)
     entry_email = tk.Entry(new_window, bd=5, relief='flat', bg='#222831', fg="white", highlightbackground='#00FFF5', highlightcolor="lime", highlightthickness=2)
     entry_email.pack(pady=5)
 
-    label_phone_number = tk.Label(new_window, text="Phone Number:", bg='#222831', fg="#00FFF5")
+    label_phone_number = tk.Label(new_window, text="Phone Number:", bg='#222831', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
     label_phone_number.pack(pady=5)
     entry_phone_number = tk.Entry(new_window, bd=5, relief='flat', bg='#222831', fg="white", highlightbackground='#00FFF5', highlightcolor="lime", highlightthickness=2)
     entry_phone_number.pack(pady=5)
 
-    label_addres = tk.Label(new_window, text="Address:", bg='#222831', fg="#00FFF5")
+    label_addres = tk.Label(new_window, text="Address:", bg='#222831', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
     label_addres.pack(pady=5)
     entry_addres = tk.Entry(new_window, bg='#222831', fg="white", bd=5, relief='flat', highlightbackground='#00FFF5', highlightcolor="lime", highlightthickness=2)
     entry_addres.pack(pady=5)
 
     # Кнопка для надсилання форми
-    button_submit = tk.Button(new_window, text="Submit", command=get_cliente_information_from_Enter, bg='#393E46', fg="#00FFF5", activebackground='lime' )
+    button_submit = tk.Button(new_window, text="Submit", command=get_cliente_information_from_Enter, bg='#393E46', fg="#00FFF5", activebackground='lime', relief="raised", font=('Verdana', 10))
     button_submit.pack(pady=15)
 
-    button_close = tk.Button(new_window, text='Close',command=close_new_window, bg='red', activebackground='lime')
+    button_close = tk.Button(new_window, text='Close',command=close_new_window, bg='red', activebackground='lime', relief="raised", font=('Verdana', 9))
     button_close.pack(pady=10)
 def get_car_information_programm(root):
     import tkinter as tk
@@ -132,20 +136,25 @@ def get_car_information_programm(root):
 
         # Перевірки введених даних
         if not make.replace(" ", "").isalpha():
-            messagebox.showerror("Error", "Please insert your name correctly (only letters and spaces allowed)")
+            messagebox.showerror("Error", "Please insert your car make correctly (only letters and spaces allowed)")
             return
 
         if model == '':
-            messagebox.showerror('Error', 'Please insert you addres')
+            messagebox.showerror('Error', 'Please insert you car model')
             return
 
-        if year == '':
-            messagebox.showerror('Error', 'Please insert you car make')
+        if year == '' or not year.isdigit() or not (1000 <= int(year) <= 2025):
+            messagebox.showerror('Error', 'Please insert you car year')
             return
 
-        if len(plate) != 6:
+        if  not plate.isalnum() or len(plate) != 6:
             messagebox.showerror("Error", "Incorrect car plate")
             return
+
+        if complaint.strip() == '':
+            messagebox.showerror('Error', 'Please insert your complaint')
+            return
+
 
         # Якщо всі перевірки пройдено, створюємо об'єкт Client
         new_car = Car(make, model, year, plate, complaint)
@@ -166,40 +175,40 @@ def get_car_information_programm(root):
     # Створення головного вікна
     new_window = tk.Toplevel(root)
     new_window.title("Car registration")
-    new_window.geometry("400x530")
+    new_window.geometry("400x560")
     new_window.config(bg='#222831')
 
     # Створення міток і полів вводу
-    label_make = tk.Label(new_window, text="make:", bg='#222831', fg="#00FFF5")
+    label_make = tk.Label(new_window, text="Make:", bg='#222831', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
     label_make.pack(pady=5)
     entry_make = tk.Entry(new_window, bd=5, relief='flat', bg='#222831',fg="white", highlightbackground='#00FFF5', highlightcolor="lime", highlightthickness=2)
     entry_make.pack(pady=5)
 
-    label_model = tk.Label(new_window, text="model:", bg='#222831', fg="#00FFF5")
+    label_model = tk.Label(new_window, text="Model:", bg='#222831', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
     label_model.pack(pady=5)
     entry_model = tk.Entry(new_window, bd=5, relief='flat', bg='#222831',fg="white", highlightbackground='#00FFF5', highlightcolor="lime", highlightthickness=2)
     entry_model.pack(pady=5)
 
-    label_year = tk.Label(new_window, text="Year:", bg='#222831', fg="#00FFF5")
+    label_year = tk.Label(new_window, text="Year:", bg='#222831', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
     label_year.pack(pady=5)
     entry_year = tk.Entry(new_window, bd=5, relief='flat', bg='#222831', fg="white", highlightbackground='#00FFF5', highlightcolor="lime", highlightthickness=2)
     entry_year.pack(pady=5)
 
-    label_plate = tk.Label(new_window, text="Plate:", bg='#222831', fg="#00FFF5")
+    label_plate = tk.Label(new_window, text="Plate:", bg='#222831', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
     label_plate.pack(pady=5)
     entry_plate = tk.Entry(new_window, bd=5, relief='flat', bg='#222831', fg="white", highlightbackground='#00FFF5', highlightcolor="lime", highlightthickness=2)
     entry_plate.pack(pady=5)
 
-    label_complaint = tk.Label(new_window, text="Complaint:", bg='#222831', fg="#00FFF5")
+    label_complaint = tk.Label(new_window, text="Complaint:", bg='#222831', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
     label_complaint.pack(pady=5)
     entry_complaint = tk.Entry(new_window, bd=5, relief='flat', bg='#222831', fg="white", highlightbackground='#00FFF5', highlightcolor="lime", highlightthickness=2)
     entry_complaint.pack(pady=5)
 
     # Кнопка для надсилання форми
-    button_submit = tk.Button(new_window, text="Submit", command=get_car_information_from_Enter, bg='#393E46', fg="#00FFF5", activebackground='lime' )
+    button_submit = tk.Button(new_window, text="Submit", command=get_car_information_from_Enter, bg='#393E46', fg="#00FFF5", activebackground='lime', relief='raised' ,font=("Verdana", 10) )
     button_submit.pack(pady=15)
 
-    button_close = tk.Button(new_window, text='Close',command=close_new_window, bg='red', activebackground='lime')
+    button_close = tk.Button(new_window, text='Close',command=close_new_window, bg='red', activebackground='lime', relief='raised' ,font=("Verdana", 9))
     button_close.pack(pady=10)
 
 def listar_clientes_programm(root):
@@ -208,16 +217,17 @@ def listar_clientes_programm(root):
 
     new_window = tk.Toplevel(root)
     new_window.title("Cliente list")
-    new_window.geometry("600x300")
+    new_window.geometry("720x300")
+    new_window.config(bg='#222831')
 
     frame = tk.Frame(new_window, bg = '#393E46')
-    frame.pack(fill='both', expand=True)
+    frame.pack(fill='both', expand=True, padx=10, pady=10)
 
     vbar = tk.Scrollbar(frame, orient='vertical')
     vbar.pack(side='right', fill='y')
 
-    listbox = tk.Listbox(frame, height=20, width=50, yscrollcommand=vbar.set, bg='#393E46', fg='#00FFF5', font=("Arial", 12), relief="flat", borderwidth=0, highlightthickness=0)
-    listbox.pack(side='top',fill='both', expand=True)
+    listbox = tk.Listbox(frame, height=20, width=50, yscrollcommand=vbar.set, bg='#393E46', fg='#00FFF5', relief='flat' ,font=("Verdana", 12), borderwidth=0, highlightthickness=1, highlightbackground='#222831')
+    listbox.pack(side='top',fill='both', expand=True, padx=10, pady=10)
 
     vbar.config(command=listbox.yview)
 
@@ -230,16 +240,16 @@ def listar_car_programm(root):
     new_window = tk.Toplevel(root)
     new_window.title("Car list")
     new_window.geometry("600x300")
-    new_window.config(bg='#393E46')
+    new_window.config(bg='#222831')
 
     frame = tk.Frame(new_window, bg = '#393E46')
-    frame.pack(fill='both', expand=True)
+    frame.pack(fill='both', expand=True, padx=10, pady=10)
 
     vbar = tk.Scrollbar(frame, orient='vertical')
     vbar.pack(side='right', fill='y')
 
-    listbox = tk.Listbox(frame, height=20, width=50, yscrollcommand=vbar.set, bg='#393E46', fg='#00FFF5', font=("Arial", 12), relief="flat", borderwidth=0, highlightthickness=0)
-    listbox.pack(side='top',fill='both', expand=True)
+    listbox = tk.Listbox(frame, height=20, width=50, yscrollcommand=vbar.set, bg='#393E46', fg='#00FFF5', relief='flat' ,font=("Verdana", 12), borderwidth=0, highlightthickness=1, highlightbackground='#222831')
+    listbox.pack(side='top',fill='both', expand=True, padx=10, pady=10)
 
     vbar.config(command=listbox.yview)
 
@@ -274,8 +284,8 @@ def deleat_client_programm(root):
     root.withdraw()
     new_window = tk.Toplevel(root)
     new_window.title("Delete client")
-    new_window.geometry("700x300")
-    new_window.config(bg='#393E46')
+    new_window.geometry("720x300")
+    new_window.config(bg='#222831')
 
     new_window.grid_rowconfigure(0, weight=1)
     new_window.grid_rowconfigure(1, weight=0)
@@ -291,19 +301,18 @@ def deleat_client_programm(root):
     vbar = tk.Scrollbar(frame, orient='vertical')
     vbar.grid(row=0, column=1, sticky='ns')
 
-    listbox = tk.Listbox(frame, height=15, width=50, bg='#393E46', fg='#00FFF5',
-                             font=("Arial", 12), relief="flat", borderwidth=0, highlightthickness=1, highlightbackground='#222831', yscrollcommand=vbar.set)
+    listbox = tk.Listbox(frame, height=15, width=50, bg='#393E46', fg='#00FFF5', relief='flat' ,font=("Verdana", 12), borderwidth=0, highlightthickness=1, highlightbackground='#222831', yscrollcommand=vbar.set)
     listbox.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
     vbar.config(command=listbox.yview)
 
     listar_clients_inside_delclient()
 
-    delete_button = tk.Button(new_window, text="Delete Selected Client", command=delete_selected, bg='#222831',
-                                  fg='#00FFF5', relief=tk.FLAT, font=("Arial", 12), activebackground='lime')
+    delete_button = tk.Button(new_window, text="Delete Selected Client", command=delete_selected, bg='#393E46',
+                                  fg='#00FFF5', relief='raised' ,font=("Verdana", 12), activebackground='lime')
     delete_button.grid(row=1, column=0, pady=10)
 
-    close_button = tk.Button(new_window, text='Close',command=close_new_window, bg='red', activebackground='lime', relief=tk.FLAT, font=("Arial", 12), fg='black')
+    close_button = tk.Button(new_window, text='Close',command=close_new_window, bg='red', activebackground='lime', relief='raised' ,font=("Verdana", 12), fg='black')
     close_button.grid(row=1, column=1, pady=10,)
 def deleat_car_programm(root):
     import tkinter as tk
@@ -333,8 +342,8 @@ def deleat_car_programm(root):
     root.withdraw()
     new_window = tk.Toplevel(root)
     new_window.title("Delete car")
-    new_window.geometry("500x300")
-    new_window.config(bg='#393E46')
+    new_window.geometry("600x300")
+    new_window.config(bg='#222831')
 
     new_window.grid_rowconfigure(0, weight=1)
     new_window.grid_rowconfigure(1, weight=0)
@@ -350,20 +359,796 @@ def deleat_car_programm(root):
     vbar = tk.Scrollbar(frame, orient='vertical')
     vbar.grid(row=0, column=1, sticky='ns')
 
-    listbox = tk.Listbox(frame, height=15, width=50, bg='#393E46', fg='#00FFF5',
-                             font=("Arial", 12), relief="flat", borderwidth=0, highlightthickness=1, highlightbackground='#222831', yscrollcommand=vbar.set)
+    listbox = tk.Listbox(frame, height=15, width=50, bg='#393E46', fg='#00FFF5', relief='flat' ,font=("Verdana", 12), borderwidth=0, highlightthickness=1, highlightbackground='#222831', yscrollcommand=vbar.set)
     listbox.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
     vbar.config(command=listbox.yview)
 
     listar_car_inside_delcar()
 
-    delete_button = tk.Button(new_window, text="Delete Selected Car", command=delete_selected, bg='#222831',
-                                  fg='#00FFF5', relief=tk.FLAT, font=("Arial", 12), activebackground='lime')
+    delete_button = tk.Button(new_window, text="Delete Selected Car", command=delete_selected, bg='#393E46',
+                                  fg='#00FFF5', relief='raised' ,font=("Verdana", 12), activebackground='lime')
     delete_button.grid(row=1, column=0, pady=10)
 
-    close_button = tk.Button(new_window, text='Close',command=close_new_window, bg='red', activebackground='lime', relief=tk.FLAT, font=("Arial", 12), fg='black')
+    close_button = tk.Button(new_window, text='Close',command=close_new_window, bg='red', activebackground='lime', relief='raised' ,font=("Verdana", 12), fg='black')
     close_button.grid(row=1, column=1, pady=10,)
 
+def change_cliente_info_programm(root):
+    import tkinter as tk
+
+    root.withdraw()
+
+    new_window = tk.Toplevel(root)
+    new_window.title("Change client information")
+    new_window.geometry("720x330")
+    new_window.config(bg='#222831')
+
+    def listar_clients_inside_changeclient():
+            lista_clientes = carregar_clientes(FICHEIRO)
+            listbox.delete(0, tk.END)
+            for i, clients in enumerate(lista_clientes, start=1):
+                listbox.insert(tk.END, f"{i}. {clients}")
+
+    def select_function():
+        from tkinter import ttk
+        from tkinter import messagebox
+        def close_new_window1():
+            new_window.deiconify()
+
+            listar_clients_inside_changeclient()
+
+
+            new_window1.destroy()
+
+        def on_select(event):
+            selected_value = combo_box.get()
+            label_combobox_selected.config(text=f"You choose: {selected_value}")
+
+        def submit_button():
+            from tkinter import messagebox
+            import re
+            email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+
+
+            combobox_value = combo_box.get()
+            variable = entry.get()
+            clientes = carregar_clientes(FICHEIRO)
+
+            if combobox_value == '':
+                messagebox.showerror("Error", "Invalid choose")
+                return
+
+            if variable == '':
+                messagebox.showerror("Error", "Invalid input")
+                return
+
+
+            if combobox_value == 'Name':
+
+                if  not variable.replace(" ", "").isalpha():
+                    messagebox.showerror("Error", "Invalid name")
+                    return
+
+                selected_client.nome = variable
+                label_name.config(text=f'Name:\n{variable}')
+
+                clientes[selected_index] = selected_client
+                gravar_Cliente(FICHEIRO, clientes)
+
+            elif combobox_value == 'Car make':
+
+                selected_client.carro = variable
+                label_carro.config(text=f'Car make:\n{variable}')
+
+                clientes[selected_index] = selected_client
+                gravar_Cliente(FICHEIRO, clientes)
+
+            elif combobox_value == 'Licence':
+
+                if not variable.isalnum() or len(variable) != 6:
+                    messagebox.showerror("Error", "Incorrect car plate")
+                    return
+
+                selected_client.placa = variable
+                label_placa.config(text=f'Licence:\n{variable}')
+
+                clientes[selected_index] = selected_client
+                gravar_Cliente(FICHEIRO, clientes)
+
+            elif combobox_value == 'Email':
+
+                if not re.match(email_pattern, variable):
+                    messagebox.showerror("Error", "Email invalid")
+                    return
+
+                selected_client.email = variable
+                label_email.config(text=f'Email:\n{variable}')
+
+                clientes[selected_index] = selected_client
+                gravar_Cliente(FICHEIRO, clientes)
+
+            elif combobox_value == 'Phone number':
+                if not variable.strip().isdigit() or len(variable) != 9:
+                    messagebox.showerror("Error", "Phone number must contain 9 digits")
+                    return
+
+                selected_client.phone_number = variable
+                label_phone_number.config(text=f'Phone number:\n{variable}')
+
+                clientes[selected_index] = selected_client
+                gravar_Cliente(FICHEIRO, clientes)
+
+            elif combobox_value == 'Addres':
+
+                selected_client.addres = variable
+                label_addres.config(text=f'Addres:\n{variable}')
+
+                clientes[selected_index] = selected_client
+                gravar_Cliente(FICHEIRO, clientes)
+
+            else:
+                messagebox.showerror("Error", "something goes wrong")
+            entry.delete(0, tk.END)
+            combo_box.current(0)
+
+        selected = listbox.curselection()
+        if not selected:
+            messagebox.showwarning("Warning", "Please select a client.")
+            return
+
+        selected_index = listbox.curselection()[0]
+        clients = carregar_clientes(FICHEIRO)
+        selected_client = clients[selected_index]
+
+        new_window.withdraw()
+
+        new_window1 = tk.Toplevel(root)
+        new_window1.title("Change client information")
+        new_window1.geometry("800x580")
+        new_window1.config(bg='#222831')
+
+        for i in range(8):
+            new_window1.grid_columnconfigure(i, weight=1)
+
+        for i in range(8):
+            new_window1.grid_rowconfigure(i, weight=0)
+
+
+        label_name = tk.Label(new_window1,text = f'Name:\n{selected_client.nome}' ,bg='#393E46', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
+        label_name.grid(row=0, column=1, sticky="nsew", pady=50, padx=10)
+
+        label_carro = tk.Label(new_window1, text = f'Car make:\n{selected_client.carro}' ,bg='#393E46', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
+        label_carro.grid(row=0, column=2, sticky="nsew", pady=50, padx=10)
+
+        label_placa = tk.Label(new_window1, text=f'Licence:\n{selected_client.placa}', bg='#393E46', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
+        label_placa.grid(row=0, column=3, sticky="nsew", pady=50, padx=10)
+
+        label_email = tk.Label(new_window1, text=f'Email:\n{selected_client.email}', bg='#393E46', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
+        label_email.grid(row=0, column=4, sticky="nsew", pady=50, padx=10)
+
+        label_phone_number = tk.Label(new_window1, text=f'Phone number:\n{selected_client.phone_number}', bg='#393E46', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
+        label_phone_number.grid(row=0, column=5, sticky="nsew", pady=50, padx=10)
+
+        label_addres = tk.Label(new_window1, text=f'Addres:\n{selected_client.addres}', bg='#393E46', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
+        label_addres.grid(row=0, column=6, sticky="nsew", pady=50, padx=10)
+
+        label_text = tk.Label(new_window1, text='Choose what you want to change:', bg='#393E46', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
+        label_text.grid(row=1, column=3, sticky="nsew",pady=(20,10), columnspan=2 )
+
+        combo_box = ttk.Combobox(new_window1, values=('','Name' , 'Car make', 'Licence', 'Email', 'Phone number', 'Addres'),
+                                 state="readonly",)
+        combo_box.current(0)
+        combo_box.grid(row=2, column=3, columnspan=2, padx=20, pady=(20, 5))
+        combo_box.bind("<<ComboboxSelected>>", on_select)
+
+        label_combobox_selected = tk.Label(new_window1,text='You choose:', bg='#393E46', fg="#00FFF5" , relief='flat' ,font=("Verdana", 12))
+        label_combobox_selected.grid(row=3, column=3, columnspan=2, padx=20, pady=(5, 40))
+
+        label_wanna_change = tk.Label(new_window1, text='Change up to:', bg='#393E46', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
+        label_wanna_change.grid(row=4, column=3, columnspan=2, pady=(20, 10))
+
+        entry = tk.Entry(new_window1, )
+        entry.grid(row=5, column=3, columnspan=2, pady=(5, 50))
+
+        button_submit = tk.Button(new_window1, text='Submit', command=submit_button, activebackground='lime', bg='#393E46', fg='#00FFF5', relief='raised' ,font=("Verdana", 12))
+        button_submit.grid(row=6, column=3, columnspan=2, pady=(10,0))
+
+        exit_button = tk.Button(new_window1, text='Close', command=close_new_window1, activebackground='lime', bg='red', relief='raised' ,font=("Verdana", 12))
+        exit_button.grid(row=7, column=3, columnspan=2, pady=(30,0), sticky='nsew')
+
+    def close_new_window():
+        root.deiconify()
+        new_window.destroy()
+
+
+    new_window.grid_rowconfigure(0, weight=1)
+    new_window.grid_rowconfigure(1, weight=0)
+    new_window.grid_columnconfigure(0, weight=1)
+    new_window.grid_columnconfigure(1, weight=1)
+
+
+    frame = tk.Frame(new_window, bg='#393E46')
+    frame.grid(row=0, column=0, sticky='nsew', padx=10, pady=10, columnspan=2)
+
+    frame.grid_rowconfigure(0, weight=1)
+    frame.grid_columnconfigure(0, weight=1)
+
+    vbar = tk.Scrollbar(frame, orient='vertical')
+    vbar.grid(row=0, column=1, sticky='ns')
+
+    listbox = tk.Listbox(frame, height=15, width=50, bg='#393E46', fg='#00FFF5', relief='flat' ,font=("Verdana", 12), borderwidth=0, highlightthickness=1,
+                         highlightbackground='#222831', yscrollcommand=vbar.set)
+    listbox.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+
+    vbar.config(command=listbox.yview)
+
+    listar_clients_inside_changeclient()
+
+    select_button = tk.Button(new_window, text="Select client",command=select_function, bg='#393E46',
+                              fg='#00FFF5', relief='raised' ,font=("Verdana", 12), activebackground='lime')
+    select_button.grid(row=1, column=0, pady=10)
+
+    close_button = tk.Button(new_window, text='Close',command=close_new_window, bg='red', activebackground='lime', relief='raised' ,font=("Verdana", 12), fg='black')
+    close_button.grid(row=1, column=1, pady=10, )
+def change_car_info_programm(root):
+    import tkinter as tk
+
+    root.withdraw()
+
+    new_window = tk.Toplevel(root)
+    new_window.title("Change car information")
+    new_window.geometry("720x330")
+    new_window.config(bg='#222831')
+
+    def listar_cars_inside_changeclient():
+            car_list = upload_car(FILE)
+            listbox.delete(0, tk.END)
+            for i, cars in enumerate(car_list, start=1):
+                listbox.insert(tk.END, f"{i}. {cars}")
+
+    def select_function():
+        from tkinter import ttk
+        from tkinter import messagebox
+        def close_new_window1():
+            new_window.deiconify()
+
+            listar_cars_inside_changeclient()
+
+            new_window1.destroy()
+
+        def on_select(event):
+            selected_value = combo_box.get()
+            label_combobox_selected.config(text=f"You choose: {selected_value}")
+
+        def submit_button():
+            from tkinter import messagebox
+            import re
+            email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+
+            combobox_value = combo_box.get()
+            variable = entry.get()
+            cars = upload_car(FILE)
+
+            if combobox_value == '':
+                messagebox.showerror("Error", "Invalid choose")
+                return
+
+            if variable == '':
+                messagebox.showerror("Error", "Invalid input")
+                return
+
+
+            if combobox_value == 'Make':
+
+                if not variable.replace(" ", "").isalpha():
+                    messagebox.showerror("Error",
+                                         "Please insert your car make correctly (only letters and spaces allowed)")
+                    return
+
+                selected_car.make = variable
+                label_make.config(text=f'Make:\n{variable}')
+
+                cars[selected_index] = selected_car
+                save_Car(FILE, cars)
+
+            elif combobox_value == 'Model':
+
+
+                selected_car.model = variable
+                label_model.config(text=f'Model:\n{variable}')
+
+                cars[selected_index] = selected_car
+                save_Car(FILE, cars)
+
+            elif combobox_value == 'Year':
+
+                if  not variable.isdigit() or not (1000 <= int(variable) <= 2025):
+                    messagebox.showerror('Error', 'Please insert you car year')
+                    return
+
+                selected_car.year = variable
+                label_year.config(text=f'Year:\n{variable}')
+
+                cars[selected_index] = selected_car
+                save_Car(FILE, cars)
+
+            elif combobox_value == 'Plate':
+
+                if not variable.isalnum() or len(variable) != 6:
+                    messagebox.showerror("Error", "Incorrect car plate")
+                    return
+
+                selected_car.plate = variable
+                label_plate.config(text=f'Plate:\n{variable}')
+
+                cars[selected_index] = selected_car
+                save_Car(FILE, cars)
+
+            elif combobox_value == 'Complaint':
+
+
+                selected_car.complaint = variable
+                label_complaint.config(text=f'Complaint:\n{variable}')
+
+                cars[selected_index] = selected_car
+                save_Car(FILE, cars)
+
+            else:
+                messagebox.showerror("Error", "something goes wrong")
+            entry.delete(0, tk.END)
+            combo_box.current(0)
+
+        selected = listbox.curselection()
+        if not selected:
+            messagebox.showwarning("Warning", "Please select a car.")
+            return
+
+        selected_index = listbox.curselection()[0]
+        cars = upload_car(FILE)
+        selected_car = cars[selected_index]
+
+        new_window.withdraw()
+
+        new_window1 = tk.Toplevel(root)
+        new_window1.title("Change car information")
+        new_window1.geometry("700x560")
+        new_window1.config(bg='#222831')
+
+        for i in range(8):
+            new_window1.grid_columnconfigure(i, weight=1)
+
+        for i in range(8):
+            new_window1.grid_rowconfigure(i, weight=0)
+
+
+        label_make = tk.Label(new_window1,text = f'Make:\n{selected_car.make}' ,bg='#393E46', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
+        label_make.grid(row=0, column=1, sticky="nsew", pady=50, padx=10)
+
+        label_model = tk.Label(new_window1, text = f'Model:\n{selected_car.model}' ,bg='#393E46', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
+        label_model.grid(row=0, column=2, sticky="nsew", pady=50, padx=10)
+
+        label_year = tk.Label(new_window1, text=f'Year:\n{selected_car.year}', bg='#393E46', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
+        label_year.grid(row=0, column=6, sticky="nsew", pady=50, padx=10)
+
+        label_plate = tk.Label(new_window1, text=f'Plate:\n{selected_car.plate}', bg='#393E46', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
+        label_plate.grid(row=0, column=5, sticky="nsew", pady=50, padx=10)
+
+        label_complaint = tk.Label(new_window1, text=f'Complaint:\n{selected_car.complaint}', bg='#393E46', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
+        label_complaint.grid(row=0, column=3, sticky="nsew", pady=50, padx=10, columnspan=2)
+
+        label_text = tk.Label(new_window1, text='Choose what you want to change:', bg='#393E46', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
+        label_text.grid(row=1, column=3, sticky="nsew",pady=(20,10), columnspan=2 )
+
+        combo_box = ttk.Combobox(new_window1, values=('','Make' , 'Model', 'Year', 'Plate', 'Complaint'),
+                                 state="readonly",)
+        combo_box.current(0)
+        combo_box.grid(row=2, column=3, columnspan=2, padx=20, pady=(20, 5))
+        combo_box.bind("<<ComboboxSelected>>", on_select)
+
+        label_combobox_selected = tk.Label(new_window1,text='You choose:', bg='#393E46', fg="#00FFF5", relief='flat' ,font=("Verdana", 12) )
+        label_combobox_selected.grid(row=3, column=3, columnspan=2, padx=20, pady=(5, 40))
+
+        label_wanna_change = tk.Label(new_window1, text='Change up to:', bg='#393E46', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
+        label_wanna_change.grid(row=4, column=3, columnspan=2, pady=(20, 10))
+
+        entry = tk.Entry(new_window1, )
+        entry.grid(row=5, column=3, columnspan=2, pady=(5, 50))
+
+        button_submit = tk.Button(new_window1, text='Submit', command=submit_button, activebackground='lime', bg='#393E46', fg='#00FFF5', relief='raised' ,font=("Verdana", 12))
+        button_submit.grid(row=6, column=3, columnspan=2, pady=(10,0))
+
+        exit_button = tk.Button(new_window1, text='Close', command=close_new_window1, activebackground='lime', bg='red', relief='raised' ,font=("Verdana", 12))
+        exit_button.grid(row=7, column=3, columnspan=2, pady=(30,0), sticky='nsew')
+
+    def close_new_window():
+        root.deiconify()
+        new_window.destroy()
+
+
+    new_window.grid_rowconfigure(0, weight=1)
+    new_window.grid_rowconfigure(1, weight=0)
+    new_window.grid_columnconfigure(0, weight=1)
+    new_window.grid_columnconfigure(1, weight=1)
+
+
+    frame = tk.Frame(new_window, bg='#393E46')
+    frame.grid(row=0, column=0, sticky='nsew', padx=10, pady=10, columnspan=2)
+
+    frame.grid_rowconfigure(0, weight=1)
+    frame.grid_columnconfigure(0, weight=1)
+
+    vbar = tk.Scrollbar(frame, orient='vertical')
+    vbar.grid(row=0, column=1, sticky='ns')
+
+    listbox = tk.Listbox(frame, height=15, width=50, bg='#393E46', fg='#00FFF5', relief='flat' ,font=("Verdana", 12), borderwidth=0, highlightthickness=1,
+                         highlightbackground='#222831', yscrollcommand=vbar.set)
+    listbox.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+
+    vbar.config(command=listbox.yview)
+
+    listar_cars_inside_changeclient()
+
+    select_button = tk.Button(new_window, text="Select client",command=select_function, bg='#393E46',
+                              fg='#00FFF5', relief='raised' ,font=("Verdana", 12), activebackground='lime')
+    select_button.grid(row=1, column=0, pady=10)
+
+    close_button = tk.Button(new_window, text='Close',command=close_new_window, bg='red', activebackground='lime', relief='raised' ,font=("Verdana", 12), fg='black')
+    close_button.grid(row=1, column=1, pady=10, )
+
+def payment_programm(root):
+    import tkinter as tk
+
+    def close_button():
+        new_window.destroy()
+        root.deiconify()
+
+    root.withdraw()
+
+    def listar_clients_inside_payment():
+        lista_clientes = carregar_clientes(FICHEIRO)
+        listbox.delete(0, tk.END)
+        for i, clients in enumerate(lista_clientes, start=1):
+            listbox.insert(tk.END, f"{i}. {clients.nome} | {clients.placa} | {clients.payment_status}")
+
+    def Inside_payment():
+        from tkinter import messagebox
+
+        selected1 = listbox.curselection()
+        if not selected1:
+            messagebox.showwarning("Warning", "Please select a client.")
+            return
+
+        selected_index = listbox.curselection()[0]
+        clients = carregar_clientes(FICHEIRO)
+        selected_client = clients[selected_index]
+
+        def listar_car_inside_payment():
+            car_list = upload_car(FILE)
+            listbox1.delete(0, tk.END)
+            for i, cars in enumerate(car_list, start=1):
+                listbox1.insert(tk.END, f"{i}. {cars}")
+
+        def select_car():
+            from tkinter import messagebox
+
+
+            def payment_button():
+                import telebot
+                import random
+                from tkinter import messagebox
+
+                lista_clientes = carregar_clientes(FICHEIRO)
+
+                price = random.randint(100, 2000)
+
+
+                TOKEN = '7711414856:AAH0D2yp8SlR3lbeT_f6WoSGPvFYwDfrcGU'
+
+                CHAT_ID = '989761372'
+
+                bot = telebot.TeleBot(TOKEN)
+
+                bot.send_message(CHAT_ID, f"🧾 *INFORMATION ABOUT PAYMENT* 🧾\n"
+                                          f"━━━━━━━━━━━━━━━━━━━━━━━━\n"
+                                          f"👤 *Name:* `{selected_client.nome}`\n"
+                                          f"📧 *Email:* `{selected_client.email}`\n"
+                                          f"📞 *Phone:* `{selected_client.phone_number}`\n"
+                                          f"💰 *To pay:* `{price}€`\n"
+                                          f"━━━━━━━━━━━━━━━━━━━━━━━━\n \n"
+                                          f"✅ *Payment confirmed!* ✅\n \n"
+                                          f"━━━━━━━━━━━━━━━━━━━━━━━━\n"
+                                          f"🚗 *Car:* `{selected_car.make}`\n"
+                                          f"🚘*Model:* `{selected_car.model}`\n"
+                                          f"📅*Year:* `{selected_car.year}`\n"
+                                          f"🔢*plate:* `{selected_car.plate}`\n"
+                                          f"━━━━━━━━━━━━━━━━━━━━━━━━\n",
+                                 parse_mode="Markdown")
+                del bot
+                for client in lista_clientes:
+                    if client.nome == selected_client.nome:
+                        client.payment_status = 'payed'
+                        break
+                gravar_Cliente(FICHEIRO, lista_clientes)
+                messagebox.showinfo('SUCCESS', f'The payment for {selected_client.nome} was successful')
+
+            def close_button():
+                new_window2.destroy()
+                root.deiconify()
+
+            selected2 = listbox1.curselection()
+            if not selected2:
+                messagebox.showwarning("Warning", "Please select a car.")
+                return
+
+            new_window1.withdraw()
+
+            selected_client = clients[selected_index]
+
+            selected_car_index = listbox1.curselection()[0]
+            cars = upload_car(FILE)
+            selected_car = cars[selected_car_index]
+
+
+            new_window2 = tk.Toplevel(root)
+            new_window2.title("Payment")
+            new_window2.geometry("720x330")
+            new_window2.config(bg='#222831')
+
+            for i in range(5):
+                new_window2.grid_columnconfigure(i, weight=1)
+
+            for i in range(6):
+                new_window2.grid_rowconfigure(i, weight=1)
+
+            label_client_name = tk.Label(new_window2, text = f'Name: {selected_client.nome}', bg='#393E46', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
+            label_client_name.grid(row=0, column = 1, padx=(0,10), pady=(0,10))
+
+            label_client_email = tk.Label(new_window2, text = f'Email: {selected_client.email}', bg='#393E46', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
+            label_client_email.grid(row=1, column=1, padx=(0,10), pady=(0,10))
+
+            label_client_phone_number = tk.Label(new_window2, text = f'Phone number: {selected_client.phone_number}', bg='#393E46', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
+            label_client_phone_number.grid(row=2, column=1, padx=(0,10), pady=(0,10))
+
+            label_client_addres = tk.Label(new_window2, text = f'Addres: {selected_client.addres}', bg='#393E46', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
+            label_client_addres.grid(row=3, column=1, padx=(0,10), pady=(0,10))
+
+            label_client_status = tk.Label(new_window2, text = f'Status: {selected_client.payment_status}', bg='#393E46', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
+            label_client_status.grid(row=4, column=1, padx=(0,10), pady=(0,10))
+
+
+
+            label_car_make = tk.Label(new_window2, text = f'Car make: {selected_car.make}', bg='#393E46', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
+            label_car_make.grid(row=0, column=3, padx=(10,0), pady=(0,10))
+
+            label_car_model = tk.Label(new_window2, text = f'Model: {selected_car.model}', bg='#393E46', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
+            label_car_model.grid(row=1, column=3, padx=(10,0), pady=(0,10))
+
+            label_car_year = tk.Label(new_window2, text=f'Year: {selected_car.year}', bg='#393E46', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
+            label_car_year.grid(row=2, column=3, padx=(10,0), pady=(0,10))
+
+            label_car_plate = tk.Label(new_window2, text=f'Plate: {selected_car.plate}', bg='#393E46', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
+            label_car_plate.grid(row=3, column=3, padx=(10,0), pady=(0,10))
+
+            label_car_complaint = tk.Label(new_window2, text =f'Complaint: {selected_car.complaint}', bg='#393E46', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
+            label_car_complaint.grid(row=4, column=3, padx=(10,0), pady=(0,10))
+
+
+            money_button = tk.Button(new_window2, text = 'Cash',command=payment_button, bg='#393E46', fg="#00FFF5",activebackground='lime', relief='raised' ,font=("Verdana", 12))
+            money_button.grid(row=5, column=1)
+
+            card_button = tk.Button(new_window2, text = 'Card',command=payment_button, bg='#393E46', fg="#00FFF5", activebackground='lime', relief='raised' ,font=("Verdana", 12))
+            card_button.grid(row=5, column=3)
+
+            close_button = tk.Button(new_window2, text='Close', command=close_button, bg='red', fg="black", activebackground='lime', relief='raised' ,font=("Verdana", 12))
+            close_button.grid(row=6, column=2)
+
+        def close_button():
+            new_window1.destroy()
+            root.deiconify()
+
+
+        new_window.withdraw()
+
+        new_window1 = tk.Toplevel(root)
+        new_window1.title("Payment information (select car)")
+        new_window1.geometry("720x330")
+        new_window1.config(bg='#222831')
+
+
+        new_window1.grid_rowconfigure(0, weight=1)
+        new_window1.grid_rowconfigure(1, weight=0)
+        new_window1.grid_columnconfigure(0, weight=1)
+        new_window1.grid_columnconfigure(1, weight=1)
+
+        frame = tk.Frame(new_window1, bg='#393E46')
+        frame.grid(row=0, column=0, sticky='nsew', padx=10, pady=10, columnspan=2)
+
+        frame.grid_rowconfigure(0, weight=1)
+        frame.grid_columnconfigure(0, weight=1)
+
+        vbar = tk.Scrollbar(frame, orient='vertical')
+        vbar.grid(row=0, column=1, sticky='ns')
+
+        listbox1 = tk.Listbox(frame, height=15, width=50, bg='#393E46', fg='#00FFF5', relief='flat' ,font=("Verdana", 12), borderwidth=0, highlightthickness=1,
+                             highlightbackground='#222831', yscrollcommand=vbar.set)
+        listbox1.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+
+        vbar.config(command=listbox1.yview)
+
+        listar_car_inside_payment()
+
+        select_button = tk.Button(new_window1, text="Select car", command = select_car,
+                                  bg='#393E46',
+                                  fg='#00FFF5', relief='raised' ,font=("Verdana", 12), activebackground='lime')
+        select_button.grid(row=1, column=0, pady=10)
+
+        close_button = tk.Button(new_window1, text='Close', command=close_button, bg='red', activebackground='lime', relief='raised' ,font=("Verdana", 12), fg='black')
+        close_button.grid(row=1, column=1, pady=10, )
+
+
+
+    new_window = tk.Toplevel(root)
+    new_window.title("Payment information (select client)")
+    new_window.geometry("720x330")
+    new_window.config(bg='#222831')
+
+    new_window.grid_rowconfigure(0, weight=1)
+    new_window.grid_rowconfigure(1, weight=0)
+    new_window.grid_columnconfigure(0, weight=1)
+    new_window.grid_columnconfigure(1, weight=1)
+
+    frame = tk.Frame(new_window, bg='#393E46')
+    frame.grid(row=0, column=0, sticky='nsew', padx=10, pady=10, columnspan=2)
+
+    frame.grid_rowconfigure(0, weight=1)
+    frame.grid_columnconfigure(0, weight=1)
+
+    vbar = tk.Scrollbar(frame, orient='vertical')
+    vbar.grid(row=0, column=1, sticky='ns')
+
+    listbox = tk.Listbox(frame, height=15, width=50, bg='#393E46', fg='#00FFF5', relief='flat' ,font=("Verdana", 12), borderwidth=0, highlightthickness=1,
+                         highlightbackground='#222831', yscrollcommand=vbar.set)
+    listbox.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+
+    vbar.config(command=listbox.yview)
+
+    listar_clients_inside_payment()
+
+    select_button = tk.Button(new_window, text="Organise payment \nfor this client", command=Inside_payment, bg='#393E46',
+                              fg='#00FFF5', relief='raised' ,font=("Verdana", 12), activebackground='lime')
+    select_button.grid(row=1, column=0, pady=10)
+
+    close_button = tk.Button(new_window, text='Close', command=close_button, bg='red', activebackground='lime', relief='raised' ,font=("Verdana", 12), fg='black')
+    close_button.grid(row=1, column=1, pady=10, )
+def car_status(root):
+    import tkinter as tk
+
+    root.withdraw()
+
+    def change_car_status():
+        from tkinter import ttk
+        from tkinter import messagebox
+
+        def close_new_window1():
+            new_window.deiconify()
+            new_window1.destroy()
+            listar_cars_inside_changeclient()
+
+        def on_select(event):
+            selected_value = combo_box.get()
+            label_combobox_selected.config(text=f"You choose: {selected_value}")
+
+        def submit_button():
+            combobox_value = combo_box.get()
+
+            if combobox_value == 'in queue':
+                selected_car.car_status = 'in queue'
+                label_status.config(text=f'Car status:\nin queue')
+                cars[selected_index] = selected_car
+                save_Car(FILE, cars)
+
+            elif combobox_value == 'in repair':
+                selected_car.car_status = 'in repair'
+                label_status.config(text=f'Car status:\nin repair')
+                cars[selected_index] = selected_car
+                save_Car(FILE, cars)
+
+            elif combobox_value == 'completed':
+                selected_car.car_status = 'completed'
+                label_status.config(text=f'Car status:\ncompleted')
+                cars[selected_index] = selected_car
+                save_Car(FILE, cars)
+            else:
+                print('Error')
+
+        selected = listbox.curselection()
+        if not selected:
+            messagebox.showwarning("Warning", "Please select a car.")
+            return
+
+        selected_index = listbox.curselection()[0]
+        cars = upload_car(FILE)
+        selected_car = cars[selected_index]
+
+        new_window.withdraw()
+
+        new_window1 = tk.Toplevel(root)
+        new_window1.title("Change car status")
+        new_window1.geometry("700x530")
+        new_window1.config(bg='#222831')
+
+        for i in range(8):
+            new_window1.grid_columnconfigure(i, weight=1)
+
+        for i in range(8):
+            new_window1.grid_rowconfigure(i, weight=0)
+
+        label_status = tk.Label(new_window1, text=f'Car status:\n{selected_car.car_status}', bg='#393E46', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
+        label_status.grid(row=0, column=3, sticky="nsew", pady=50, padx=10, columnspan=2)
+
+
+        combo_box = ttk.Combobox(new_window1, values=('', 'in queue', 'in repair', 'completed'),
+                                 state="readonly", )
+        combo_box.current(0)
+        combo_box.grid(row=2, column=3, columnspan=2, padx=20, pady=(20, 5))
+        combo_box.bind("<<ComboboxSelected>>", on_select)
+
+        label_combobox_selected = tk.Label(new_window1, text='You choose:', bg='#393E46', fg="#00FFF5", relief='flat' ,font=("Verdana", 12))
+        label_combobox_selected.grid(row=3, column=3, columnspan=2, padx=20, pady=(5, 40))
+
+
+
+        button_submit = tk.Button(new_window1, text='Submit',command=submit_button, activebackground='lime',
+                                  bg='#393E46', fg='#00FFF5', relief='raised' ,font=("Verdana", 12))
+        button_submit.grid(row=6, column=3, columnspan=2, pady=(10, 0))
+
+        exit_button = tk.Button(new_window1, text='Close',command=close_new_window1, activebackground='lime', bg='red', relief='raised' ,font=("Verdana", 12))
+        exit_button.grid(row=7, column=3, columnspan=2, pady=(30, 0), sticky='nsew')
+
+    new_window = tk.Toplevel(root)
+    new_window.title("Change car information(select car)")
+    new_window.geometry("720x330")
+    new_window.config(bg='#222831')
+
+    def listar_cars_inside_changeclient():
+        car_list = upload_car(FILE)
+        listbox.delete(0, tk.END)
+        for i, cars in enumerate(car_list, start=1):
+            listbox.insert(tk.END, f"{i}. {cars}")
+
+    def close_new_window():
+        root.deiconify()
+        new_window.destroy()
+
+
+    new_window.grid_rowconfigure(0, weight=1)
+    new_window.grid_rowconfigure(1, weight=0)
+    new_window.grid_columnconfigure(0, weight=1)
+    new_window.grid_columnconfigure(1, weight=1)
+
+
+    frame = tk.Frame(new_window, bg='#393E46')
+    frame.grid(row=0, column=0, sticky='nsew', padx=10, pady=10, columnspan=2)
+
+    frame.grid_rowconfigure(0, weight=1)
+    frame.grid_columnconfigure(0, weight=1)
+
+    vbar = tk.Scrollbar(frame, orient='vertical')
+    vbar.grid(row=0, column=1, sticky='ns')
+
+    listbox = tk.Listbox(frame, height=15, width=50, bg='#393E46', fg='#00FFF5', relief='flat' ,font=("Verdana", 12), borderwidth=0, highlightthickness=1,
+                         highlightbackground='#222831', yscrollcommand=vbar.set)
+    listbox.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+
+    vbar.config(command=listbox.yview)
+
+    listar_cars_inside_changeclient()
+
+    select_button = tk.Button(new_window, text="Select client",command=change_car_status, bg='#393E46',
+                              fg='#00FFF5', relief='raised' ,font=("Verdana", 12), activebackground='lime')
+    select_button.grid(row=1, column=0, pady=10)
+
+    close_button = tk.Button(new_window, text='Close',command=close_new_window, bg='red', activebackground='lime', relief='raised' ,font=("Verdana", 12), fg='black')
+    close_button.grid(row=1, column=1, pady=10, )
 
 
