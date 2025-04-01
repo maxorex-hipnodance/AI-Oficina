@@ -1,0 +1,57 @@
+from flask import Flask, request, jsonify, render_template
+from cliente import Client
+from persistencia import gravar_Cliente, carregar_clientes, save_Car, upload_car
+from defs import listar_clientes
+from flask import flash, redirect, url_for
+
+FICHEIRO = 'clientes.txt'
+lista_clientes = carregar_clientes(FICHEIRO)
+
+
+app = Flask(__name__, template_folder='templates')
+
+app.secret_key ='123'
+
+print(Client.__init__.__code__.co_varnames)
+@app.route('/')
+def clientes():
+    clientes_lista = listar_clientes(lista_clientes)
+    return render_template('clientes_1.html', clientes=clientes_lista)
+
+
+@app.route('/', methods=['POST'])
+def new_client():
+    try:
+        # Отримуємо дані з форми (не JSON, а звичайні дані форми)
+        nome = request.form['nome']
+        carro = request.form['carro']
+        phone_number = request.form['phone_number']
+        email = request.form['email']
+        addres = request.form['addres']
+        placa = request.form['placa']
+        # Перевіряємо, чи є всі необхідні поля
+        if not nome or not carro or not phone_number or not email or not addres or not placa:
+            return jsonify({'error': 'Faltam informações obrigatórias'}), 400
+
+        novo_cliente = Client(nome, carro, placa, phone_number, email, addres)
+        lista_clientes.append(novo_cliente)
+        gravar_Cliente(FICHEIRO, lista_clientes)
+
+        flash('Cliente adicionado com sucesso!', 'success')
+        return redirect(url_for('clientes'))
+
+    except Exception as e:
+        return jsonify({'error': f'Ocorreu um erro: {str(e)}'}), 500
+
+
+@app.route('/delete_client/<nome>', methods=['POST'])
+def delete_client(nome):
+    global lista_clientes
+
+    lista_clientes = [c for c in lista_clientes if c.nome != nome]
+    gravar_Cliente(FICHEIRO, lista_clientes)
+    flash(f'Cliente {nome} removido com sucesso!', 'success')
+    return redirect(url_for('clientes'))
+# main driver functionx\
+if __name__ == '__main__':
+    app.run(debug=True)
