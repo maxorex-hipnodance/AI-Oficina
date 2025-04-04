@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+
+
+        .button-container {
+            text-align: center;
+        }
+
+
+        .centered-btn {
+            display: inline-block;
+            padding: 15px 30px; /* Більші відступи всередині кнопки */
+            font-size: 18px; /* Більший розмір тексту */
+            background-color: #007bff; /* Синій фон */
+            color: white; /* Білий текст */
+            border: none; /* Без обведення */
+            border-radius: 5px; /* Закруглені кути */
+            margin: 10px; /* Відступи між кнопками */
+            cursor: pointer; /* Курсор у вигляді руки */
+            transition: background-color 0.3s ease; /* Плавна зміна кольору при наведенні */
+        }
+
+
+        .centered-btn:hover {
+            background-color: #0056b3; /* Темніший синій колір при наведенні */
+        }
+    </style>
+    <meta charset="UTF-8">
+    <title>HOME</title>
+    <title>сhoose your list</title>
+</head>
+<body>
+    <h1>Choose your list:</h1>
+    <button class="centered-btn" onclick="window.location.href='/page1'">Client list</button>
+    <button class="centered-btn" onclick="window.location.href='/page2'">Car list</button>
+</body>
+</html>
