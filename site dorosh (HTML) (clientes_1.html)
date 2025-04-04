@@ -44,10 +44,15 @@
         </table>
 
 
-    <!-- button -->
+    <!-- buttons -->
         <div class="text-end" >
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addClientModal">
+                <button class="btn btn-primary btn-spacing" data-bs-toggle="modal" data-bs-target="#addClientModal">
                     Adicionar Novo Cliente
+                </button>
+        </div>
+        <div class="text-end" >
+                <button class="btn btn-home" onclick="window.location.href='/'">
+                    HOME
                 </button>
         </div>
     </div>
@@ -60,7 +65,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                  <div class="modal-body">
-                    <form id="add-client-form" method="POST" action="/">
+                    <form id="add-client-form" method="POST" action="/page1">
                         <div class="mb-3">
                             <label for="name" class="form-label">Name</label>
                             <input type="text" class="form-control" id="name" name="nome" required>
@@ -99,11 +104,17 @@
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
         {% for category, message in messages %}
-            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            <div class="flash-message {{ category }} alert-dismissible fade show" role="alert">
                 {{ message }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         {% endfor %}
     {% endif %}
 {% endwith %}
+
+<script>
+    setTimeout(() => {
+        document.querySelectorAll('.flash-message').forEach(el => el.classList.add('fade-out'));
+    }, 5000);
+</script>
 </html>
